@@ -1,20 +1,15 @@
 <?php
+
 namespace StoreKeeper\ApiWrapper\Wrapper;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Handler\CurlMultiHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Promise\Promise;
+
 use GuzzleHttp\Promise\PromiseInterface;
-use Psr\Http\Message\ResponseInterface;
 use Swoole\Server;
-use StoreKeeper\ApiWrapper\Exception\GeneralException;
 
 /**
- * Class AsyncFullJsonAdapter
- * @package StoreKeeper\ApiWrapper\Wrapper
+ * Class AsyncFullJsonAdapter.
  */
-class SwooleFullJsonAdapter extends AsyncFullJsonAdapter {
+class SwooleFullJsonAdapter extends AsyncFullJsonAdapter
+{
     /**
      * @var Server
      */
@@ -25,6 +20,7 @@ class SwooleFullJsonAdapter extends AsyncFullJsonAdapter {
         $this->serv = $swoole;
         parent::__construct($server, $connection_options);
     }
+
     /**
      * @param $call
      */
@@ -33,15 +29,16 @@ class SwooleFullJsonAdapter extends AsyncFullJsonAdapter {
         parent::postProcessCall($call);
 
         // set timer to check response later
-        $this->serv->tick(500, function ($timer_id) use ($call){
+        $this->serv->tick(500, function ($timer_id) use ($call) {
             $this->doTheTick();
-            if ($call->getState() != PromiseInterface::PENDING ){
+            if (PromiseInterface::PENDING != $call->getState()) {
                 $this->serv->clearTimer($timer_id);
             }
         });
     }
-    function __toString(){
+
+    public function __toString()
+    {
         return 'SwooleFullJsonAdapter('.$this->server.')';
     }
 }
-

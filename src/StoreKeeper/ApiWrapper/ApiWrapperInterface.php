@@ -2,22 +2,17 @@
 
 namespace StoreKeeper\ApiWrapper;
 
-
 /**
- * Class ApiWrapper
- * @package StoreKeeper\ApiWrapper
+ * Class ApiWrapper.
  */
 interface ApiWrapperInterface extends ActionWrapperInterface
 {
-    /**
-     * @param Auth $auth
-     */
-    function setAuth(Auth $auth);
+    public function setAuth(Auth $auth);
 
     /**
      * @return \StoreKeeper\ApiWrapper\Auth
      */
-    public function getAuth(): \StoreKeeper\ApiWrapper\Auth;
+    public function getAuth(): Auth;
 
     /**
      * @param $module_name
@@ -27,13 +22,11 @@ interface ApiWrapperInterface extends ActionWrapperInterface
      *
      * @return mixed
      */
-    function callFunction($module_name, $name, array $params = array(), Auth $auth = null);
+    public function callFunction($module_name, $name, array $params = [], Auth $auth = null);
 
     /**
      * @param $module_name
      * @param Auth $auth
-     *
-     * @return ModuleApiWrapperInterface
      */
-    function getModule($module_name, Auth $auth = null): ModuleApiWrapperInterface;
+    public function getModule($module_name, Auth $auth = null): ModuleApiWrapperInterface;
 }

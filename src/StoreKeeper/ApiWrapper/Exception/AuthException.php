@@ -2,11 +2,12 @@
 
 namespace StoreKeeper\ApiWrapper\Exception;
 
-class AuthException extends GeneralException{
+class AuthException extends GeneralException
+{
     /**
-     * exception class
+     * exception class.
+     *
      * @var string
      */
     protected $exc_class = 'Auth';
 }
-

@@ -2,19 +2,14 @@
 
 namespace StoreKeeper\ApiWrapper;
 
-
 use StoreKeeper\ApiWrapper\Wrapper\WrapperInterface;
 
 /**
- * Class ApiWrapper
- * @package StoreKeeper\ApiWrapper
+ * Class ApiWrapper.
  */
 interface ActionWrapperInterface
 {
-    /**
-     * @param WrapperInterface $wrapper
-     */
-    function setWrapper(WrapperInterface $wrapper);
+    public function setWrapper(WrapperInterface $wrapper);
 
     /**
      * @return \StoreKeeper\ApiWrapper\Wrapper\WrapperInterface
@@ -23,9 +18,8 @@ interface ActionWrapperInterface
 
     /**
      * @param $action
-     * @param array $params
      *
      * @return mixed
      */
-    function callAction($action, array $params = array());
+    public function callAction($action, array $params = []);
 }

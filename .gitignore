@@ -6,3 +6,4 @@ composer.phar
 config/
 .phpunit.result.cache
 .env.test.local
+.php_cs.cache

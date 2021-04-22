@@ -1,55 +1,62 @@
 <?php
+
 namespace StoreKeeper\ApiWrapper;
 
-class Auth {
+class Auth
+{
     /**
      * @var array
      */
-    protected $auth = array();
+    protected $auth = [];
     /**
      * @var array
      */
-    protected $extra = array();
+    protected $extra = [];
+
     /**
      * @param array $auth
      */
-    function __construct(array $auth = null,array $extra = null) {
-        if( !empty( $auth )){
+    public function __construct(array $auth = null, array $extra = null)
+    {
+        if (!empty($auth)) {
             $this->setAuth($auth);
         }
-        if( !empty( $extra )){
+        if (!empty($extra)) {
             $this->setExtra($extra);
         }
     }
+
     /**
-     * if account login data is set
+     * if account login data is set.
      */
-    final function isAccountSet(){
+    final public function isAccountSet()
+    {
         return array_key_exists('account', $this->auth)
-            && !empty($this->auth['account'] );
+            && !empty($this->auth['account']);
     }
 
     /**
-     * if login method data is set
+     * if login method data is set.
      */
-    final function isLoginMethodSet(){
+    final public function isLoginMethodSet()
+    {
         return array_key_exists('mode', $this->auth)
-            && !empty($this->auth['mode'] );
+            && !empty($this->auth['mode']);
     }
-    /**
-     * @param array $extra
-     */
+
     public function setExtra(array $extra)
     {
         $this->extra = $extra;
     }
+
     /**
      * @param array $extra
      */
-    public function addExtra($name , $data)
+    public function addExtra($name, $data)
     {
         $this->extra[$name] = $data;
     }
+
     /**
      * @return array
      */
@@ -59,120 +66,153 @@ class Auth {
     }
 
     /**
-     * sets user
+     * sets user.
+     *
      * @param string $account account name
-     * @param string $user user login
+     * @param string $user    user login
      */
-    function setAnonymous() {
-        $this->auth ['user'] = 'anonymous';
-        $this->auth ['rights'] = 'anonymous';
-        $this->auth ['mode'] = 'none';
+    public function setAnonymous()
+    {
+        $this->auth['user'] = 'anonymous';
+        $this->auth['rights'] = 'anonymous';
+        $this->auth['mode'] = 'none';
     }
+
     /**
-     * sets user
+     * sets user.
+     *
      * @param string $account account name
-     * @param string $user user login
+     * @param string $user    user login
      */
-    function setUser( $user) {
-        $this->auth ['user'] = $user;
-        $this->auth ['rights'] = 'user';
+    public function setUser($user)
+    {
+        $this->auth['user'] = $user;
+        $this->auth['rights'] = 'user';
     }
+
     /**
-     * sets subuser
-     * @param string $account account name
+     * sets subuser.
+     *
+     * @param string $account    account name
      * @param string $subaccount subaccount name
-     * @param string $user subuser login
+     * @param string $user       subuser login
      */
-    function setSubuser( $subaccount, $user) {
-        $this->auth ['user'] = $user;
-        $this->auth ['subaccount'] = $subaccount;
-        $this->auth ['rights'] = 'subuser';
+    public function setSubuser($subaccount, $user)
+    {
+        $this->auth['user'] = $user;
+        $this->auth['subaccount'] = $subaccount;
+        $this->auth['rights'] = 'subuser';
     }
 
     /**
      * @param string $name account to use
      */
-    function setAccount($name) {
-        $this->auth ['account'] = $name;
+    public function setAccount($name)
+    {
+        $this->auth['account'] = $name;
     }
-    function getAccount() {
-        return $this->auth ['account'];
+
+    public function getAccount()
+    {
+        return $this->auth['account'];
     }
+
     /**
-     * authorisation to hash
+     * authorisation to hash.
+     *
      * @param string $hash hash got before
      */
-    function setHash($hash) {
-        $this->auth ['hash'] = $hash;
-        $this->auth ['mode'] = 'hash';
+    public function setHash($hash)
+    {
+        $this->auth['hash'] = $hash;
+        $this->auth['mode'] = 'hash';
     }
+
     /**
-     * authorisation to password
+     * authorisation to password.
+     *
      * @param string $password hash got before
      */
-    function setPassword($password) {
-        $this->auth ['password'] = $password;
-        $this->auth ['mode'] = 'password';
+    public function setPassword($password)
+    {
+        $this->auth['password'] = $password;
+        $this->auth['mode'] = 'password';
     }
+
     /**
-     * authorisation to apikey
+     * authorisation to apikey.
+     *
      * @param string $apikey hash got before
      */
-    function setApiKey($apikey) {
-        $this->auth ['apikey'] = $apikey;
-        $this->auth ['mode'] = 'apikey';
+    public function setApiKey($apikey)
+    {
+        $this->auth['apikey'] = $apikey;
+        $this->auth['mode'] = 'apikey';
     }
+
     /**
      * @param string $name
      */
-    function setClientName($name = 'Php Wrappers') {
-        $this->auth ['client_name'] = $name;
+    public function setClientName($name = 'Php Wrappers')
+    {
+        $this->auth['client_name'] = $name;
     }
 
     /**
      * @return mixed
      */
-    function getClientName() {
-        return $this->auth ['client_name'];
+    public function getClientName()
+    {
+        return $this->auth['client_name'];
     }
+
     /**
      * @param string $ip
      */
-    function setClientIp( $ip = null ) {
-        if( empty($ip) && array_key_exists('REMOTE_ADDR', $_SERVER))
-            $ip = $_SERVER ['REMOTE_ADDR'];
-        if( empty($ip) && array_key_exists('SERVER_ADDR', $_SERVER))
-            $ip = $_SERVER ['SERVER_ADDR '];
-        if( empty($ip))
+    public function setClientIp($ip = null)
+    {
+        if (empty($ip) && array_key_exists('REMOTE_ADDR', $_SERVER)) {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+        if (empty($ip) && array_key_exists('SERVER_ADDR', $_SERVER)) {
+            $ip = $_SERVER['SERVER_ADDR '];
+        }
+        if (empty($ip)) {
             $ip = '127.0.0.1';
-        $this->auth ['user_ip'] = $ip;
+        }
+        $this->auth['user_ip'] = $ip;
     }
+
     /**
      * @return mixed
      */
-    function getClientIp() {
-        if( !array_key_exists('user_ip', $this->auth)){
+    public function getClientIp()
+    {
+        if (!array_key_exists('user_ip', $this->auth)) {
             $this->setClientIp();
         }
-        return $this->auth ['user_ip'];
+
+        return $this->auth['user_ip'];
     }
+
     /**
      * @param array $auth
      */
-    function isValid() {
+    public function isValid()
+    {
         return $this->isAccountSet() && $this->isLoginMethodSet();
     }
-    /**
-     * @param array $auth
-     */
-    function setAuth(array $auth) {
+
+    public function setAuth(array $auth)
+    {
         $this->auth = $auth;
     }
+
     /**
      * @return array
      */
-    function getAuth() {
+    public function getAuth()
+    {
         return $this->auth;
     }
-
-} 
+}

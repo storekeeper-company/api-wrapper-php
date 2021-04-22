@@ -2,7 +2,6 @@
 
 namespace StoreKeeper\ApiWrapper\Iterator;
 
-
 class ListCallPaginatedIterator extends ListCallIterator
 {
     use PaginatedIteratorTrait;
@@ -10,7 +9,7 @@ class ListCallPaginatedIterator extends ListCallIterator
     public function next()
     {
         parent::next();
-        if( !parent::valid() ){
+        if (!parent::valid()) {
             // end of the array or empty
             $this->onNextInvalid();
         }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace StoreKeeper\ApiWrapper\Iterator;
-
 
 class ListCallByIdPaginatedIterator extends ListCallByIdIterator
 {
@@ -11,7 +9,7 @@ class ListCallByIdPaginatedIterator extends ListCallByIdIterator
     public function next()
     {
         parent::next();
-        if( !parent::valid() ){
+        if (!parent::valid()) {
             // end of the array or empty
             $this->onNextInvalid();
         }

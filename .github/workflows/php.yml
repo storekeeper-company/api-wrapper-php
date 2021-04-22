@@ -19,6 +19,11 @@ jobs:
       with:
         php-version: '7.4'
         coverage: none
+    - name: Setup problem matchers for PHP
+      run: echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+
+    - name: Setup problem matchers for PHPUnit
+      run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict

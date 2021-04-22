@@ -1,15 +1,13 @@
 <?php
 
-
 namespace StoreKeeper\ApiWrapper\Iterator;
-
 
 class ListCallIterator implements \Iterator, \Countable, \ArrayAccess
 {
     /**
      * @var callable
      */
-    protected $call ;
+    protected $call;
     /**
      * @var bool
      */
@@ -25,8 +23,6 @@ class ListCallIterator implements \Iterator, \Countable, \ArrayAccess
 
     /**
      * ListCallIterator constructor.
-     *
-     * @param callable $call
      */
     public function __construct(callable $call)
     {
@@ -34,18 +30,16 @@ class ListCallIterator implements \Iterator, \Countable, \ArrayAccess
     }
 
     /**
-     * call the backend if needed
+     * call the backend if needed.
      */
-    protected function ensureResult(){
-        if( !$this->executed ){
+    protected function ensureResult()
+    {
+        if (!$this->executed) {
             $this->executeCall();
             $this->executed = true;
         }
     }
 
-    /**
-     * @return bool
-     */
     public function isExecuted(): bool
     {
         return $this->executed;
@@ -58,9 +52,7 @@ class ListCallIterator implements \Iterator, \Countable, \ArrayAccess
     {
         $this->executed = $executed;
     }
-    /**
-     * @return int
-     */
+
     public function getCount(): int
     {
         return $this->count;
@@ -69,14 +61,17 @@ class ListCallIterator implements \Iterator, \Countable, \ArrayAccess
     /**
      * @return int
      */
-    function count(){
+    public function count()
+    {
         $this->ensureResult();
+
         return $this->count;
     }
 
     public function current()
     {
         $this->ensureResult();
+
         return $this->it->current();
     }
 
@@ -89,12 +84,14 @@ class ListCallIterator implements \Iterator, \Countable, \ArrayAccess
     public function key()
     {
         $this->ensureResult();
+
         return $this->it->key();
     }
 
     public function valid()
     {
         $this->ensureResult();
+
         return $this->it->valid();
     }
 
@@ -104,29 +101,32 @@ class ListCallIterator implements \Iterator, \Countable, \ArrayAccess
         $this->it->rewind();
     }
 
-    public function offsetSet($offset, $value) {
-
+    public function offsetSet($offset, $value)
+    {
         $this->ensureResult();
         $this->it->offsetSet($offset, $value);
     }
 
-    public function offsetExists($offset) {
+    public function offsetExists($offset)
+    {
         $this->ensureResult();
+
         return $this->it->offsetExists($offset);
     }
 
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset)
+    {
         $this->ensureResult();
         $this->it->offsetUnset($offset);
     }
 
-    public function offsetGet($offset) {
+    public function offsetGet($offset)
+    {
         $this->ensureResult();
+
         return $this->it->offsetGet($offset);
     }
-    /**
-     *
-     */
+
     protected function executeCall(): void
     {
         $result = $this->doCall();
@@ -143,8 +143,7 @@ class ListCallIterator implements \Iterator, \Countable, \ArrayAccess
     }
 
     /**
-     * For extending
-     * @return array
+     * For extending.
      */
     protected function doCall(): array
     {
@@ -152,23 +151,20 @@ class ListCallIterator implements \Iterator, \Countable, \ArrayAccess
     }
 
     /**
-     * @param array $result
-     *
      * @return mixed
      */
     protected function getDataFromResult(array $result)
     {
-        if ( ! array_key_exists('data', $result)) {
+        if (!array_key_exists('data', $result)) {
             throw new \AssertionError('No \'data\' key in result');
         }
-        if ( ! array_key_exists('count', $result)) {
+        if (!array_key_exists('count', $result)) {
             $this->count = count($result['data']);
         } else {
-            $this->count = (int)$result['count'];
+            $this->count = (int) $result['count'];
         }
         $data = &$result['data'];
 
         return $data;
     }
-
 }

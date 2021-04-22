@@ -2,11 +2,12 @@
 
 namespace StoreKeeper\ApiWrapper\Exception;
 
-class LookupException extends GeneralException{
+class LookupException extends GeneralException
+{
     /**
-     * exception class
+     * exception class.
+     *
      * @var string
      */
     protected $exc_class = 'Lookup';
 }
-

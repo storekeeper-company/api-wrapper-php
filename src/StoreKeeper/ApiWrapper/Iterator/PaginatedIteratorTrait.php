@@ -1,12 +1,9 @@
 <?php
 
-
 namespace StoreKeeper\ApiWrapper\Iterator;
-
 
 trait PaginatedIteratorTrait
 {
-
     /**
      * @var int
      */
@@ -16,27 +13,18 @@ trait PaginatedIteratorTrait
      */
     protected $start = 0;
 
-    /**
-     * @return int
-     */
-    abstract function getCount(): int;
+    abstract public function getCount(): int;
 
     /**
-     * @param bool $executed
-     *
      * @return mixed
      */
-    abstract protected function setExecuted(bool $executed): void ;
-    /**
-     * @return bool
-     */
+    abstract protected function setExecuted(bool $executed): void;
+
     public function maybeHasMore(): bool
     {
         return $this->getCount() > 0 && $this->per_page <= $this->getCount();
     }
-    /**
-     * @return int
-     */
+
     public function getStart(): int
     {
         return $this->start;
@@ -44,7 +32,7 @@ trait PaginatedIteratorTrait
 
     public function onNextInvalid()
     {
-        if( $this->maybeHasMore() ){
+        if ($this->maybeHasMore()) {
             // there was something lets try again
             $this->start += $this->per_page;
             $this->setExecuted(false);
@@ -52,17 +40,12 @@ trait PaginatedIteratorTrait
             // self::valid() call will to the backend call
         }
     }
-    /**
-     * @return int
-     */
+
     public function getPerPage(): int
     {
         return $this->per_page;
     }
 
-    /**
-     * @param int $per_page
-     */
     public function setPerPage(int $per_page): void
     {
         $this->per_page = $per_page;

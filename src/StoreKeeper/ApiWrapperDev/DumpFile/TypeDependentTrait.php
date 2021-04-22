@@ -1,73 +1,57 @@
 <?php
 
-
 namespace StoreKeeper\ApiWrapperDev\DumpFile;
-
 
 use StoreKeeper\ApiWrapperDev\DumpFile;
 
 trait TypeDependentTrait
 {
-
     protected $default_file_dump_class = DumpFile::class;
     protected $extra_file_dump_types = [];
-    /**
-     * @return string
-     */
+
     public function getDefaultFileDumpClass(): string
     {
         return $this->default_file_dump_class;
     }
 
-    /**
-     * @param string $default_file_dump_class
-     */
     public function setDefaultFileDumpClass(string $default_file_dump_class): void
     {
         self::checkFileDumpClass($default_file_dump_class);
         $this->default_file_dump_class = $default_file_dump_class;
     }
 
-    /**
-     * @return array
-     */
     public function getExtraFileDumpTypes(): array
     {
         return $this->extra_file_dump_types;
     }
 
     /**
-     * @param string $type
-     * @param string $class
-     *
      * @return $this
      */
-    public function addExtraFileDumpType(string $type, string $class ): self
+    public function addExtraFileDumpType(string $type, string $class): self
     {
         self::checkFileDumpClass($class);
         $this->extra_file_dump_types[$type] = $class;
+
         return $this;
     }
 
-    /**
-     * @param string $class
-     */
     protected static function checkFileDumpClass(string $class): void
     {
-        if ( ! is_a($class, DumpFile::class, true)) {
-            throw new \RuntimeException("$class is not " . DumpFile::class);
+        if (!is_a($class, DumpFile::class, true)) {
+            throw new \RuntimeException("$class is not ".DumpFile::class);
         }
     }
 
     /**
      * @param $type
-     *
-     * @return string
      */
-    function getClassForFileDumpType($type): string{
-        if( array_key_exists($type, $this->extra_file_dump_types)){
+    public function getClassForFileDumpType($type): string
+    {
+        if (array_key_exists($type, $this->extra_file_dump_types)) {
             return $this->extra_file_dump_types[$type];
         }
+
         return $this->default_file_dump_class;
     }
 }
