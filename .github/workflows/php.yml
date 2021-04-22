@@ -17,7 +17,7 @@ jobs:
     - name: Setup PHP Action
       uses: shivammathur/setup-php@2.10.0
       with:
-        php-version: '7.4'
+        php-version: '7.3'
         coverage: none
     - name: Setup problem matchers for PHP
       run: echo "::add-matcher::${{ runner.tool_cache }}/php.json"
