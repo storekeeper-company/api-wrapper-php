@@ -32,6 +32,9 @@
         "guzzlehttp/guzzle": ">=5",
         "psr/log": "^1.1"
     },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
     "require-dev": {
         "mockery/mockery": "^1.3",
         "phpunit/phpunit": "^8.5",
