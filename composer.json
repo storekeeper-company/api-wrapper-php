@@ -33,7 +33,6 @@
         "psr/log": "^1.1"
     },
     "require-dev": {
-        "elendev/nexus-composer-push": "^0.1.0",
         "mockery/mockery": "^1.3",
         "phpunit/phpunit": "^8.5",
         "symfony/dotenv": "^5.0",
