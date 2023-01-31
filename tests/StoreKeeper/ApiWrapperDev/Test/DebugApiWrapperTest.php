@@ -6,11 +6,11 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\ExpectationInterface;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
-use ColinODell\PsrTestLogger\TestLogger;
 use StoreKeeper\ApiWrapper\Auth\AnonymousAuth;
 use StoreKeeper\ApiWrapperDev\DebugApiWrapper;
 use StoreKeeper\ApiWrapperDev\DumpFile;
 use StoreKeeper\ApiWrapperDev\Test\DumpFileTest;
+use StoreKeeper\ApiWrapperDev\Test\TestLogger;
 use StoreKeeper\ApiWrapperDev\Wrapper\MockAdapter;
 
 /**
