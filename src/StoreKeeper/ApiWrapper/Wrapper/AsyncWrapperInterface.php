@@ -2,7 +2,7 @@
 
 namespace StoreKeeper\ApiWrapper\Wrapper;
 
-interface AsyncWrapperInterface
+interface AsyncWrapperInterface extends WrapperInterface
 {
     public function doTheTick();
 }
