@@ -11,7 +11,7 @@ use StoreKeeper\ApiWrapper\Exception\GeneralException;
 /**
  * Class AsyncFullJsonAdapter.
  */
-class AsyncFullJsonAdapter extends FullJsonAdapter
+class AsyncFullJsonAdapter extends FullJsonAdapter implements AsyncWrapperInterface
 {
     /**
      * @var CurlMultiHandler

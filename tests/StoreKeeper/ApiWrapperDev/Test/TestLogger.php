@@ -5,7 +5,8 @@ namespace StoreKeeper\ApiWrapperDev\Test;
 use Psr\Log\AbstractLogger;
 
 /**
- * php 7.3 compatible version of colinodell/psr-testlogger:1.1
+ * php 7.3 compatible version of colinodell/psr-testlogger:1.1.
+ *
  * @see https://github.com/colinodell/psr-testlogger/blob/v1.1.0/src/TestLogger.php
  * can be removed after not having dependency on the 7.3 anymore
  */
@@ -31,7 +32,7 @@ class TestLogger extends AbstractLogger
         ];
 
         $this->recordsByLevel[$record['level']][] = $record;
-        $this->records[]                          = $record;
+        $this->records[] = $record;
     }
 
     /**
@@ -57,7 +58,7 @@ class TestLogger extends AbstractLogger
                 return false;
             }
 
-            return ! isset($record['context']) || $rec['context'] === $record['context'];
+            return !isset($record['context']) || $rec['context'] === $record['context'];
         }, $level);
     }
 
@@ -67,7 +68,7 @@ class TestLogger extends AbstractLogger
     public function hasRecordThatContains(string $message, string $level): bool
     {
         return $this->hasRecordThatPasses(static function (array $rec) use ($message) {
-            return \strpos($rec['message'], $message) !== false;
+            return false !== \strpos($rec['message'], $message);
         }, $level);
     }
 
@@ -87,7 +88,7 @@ class TestLogger extends AbstractLogger
      */
     public function hasRecordThatPasses(callable $predicate, string $level): bool
     {
-        if (! isset($this->recordsByLevel[$level])) {
+        if (!isset($this->recordsByLevel[$level])) {
             return false;
         }
 
@@ -106,9 +107,9 @@ class TestLogger extends AbstractLogger
     public function __call(string $method, array $args): bool
     {
         if (\preg_match('/(.*)(Debug|Info|Notice|Warning|Error|Critical|Alert|Emergency)(.*)/', $method, $matches) > 0) {
-            $genericMethod = $matches[1] . ($matches[3] !== 'Records' ? 'Record' : '') . $matches[3];
-            $callable      = [$this, $genericMethod];
-            $level         = \strtolower($matches[2]);
+            $genericMethod = $matches[1].('Records' !== $matches[3] ? 'Record' : '').$matches[3];
+            $callable = [$this, $genericMethod];
+            $level = \strtolower($matches[2]);
             if (\is_callable($callable)) {
                 $args[] = $level;
 
@@ -116,12 +117,12 @@ class TestLogger extends AbstractLogger
             }
         }
 
-        throw new \BadMethodCallException('Call to undefined method ' . static::class . '::' . $method . '()');
+        throw new \BadMethodCallException('Call to undefined method '.static::class.'::'.$method.'()');
     }
 
     public function reset(): void
     {
-        $this->records        = [];
+        $this->records = [];
         $this->recordsByLevel = [];
     }
 }

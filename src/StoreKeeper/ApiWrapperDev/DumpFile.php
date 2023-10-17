@@ -141,7 +141,7 @@ class DumpFile
         }
     }
 
-    protected static function cleanSecretValues(array &$array, array $keys = self::SECRET_KEYS)
+    protected static function cleanSecretValues(array & $array, array $keys = self::SECRET_KEYS)
     {
         $fn = self::setSecretValuesFn($keys);
         array_walk_recursive($array, $fn);
@@ -149,7 +149,7 @@ class DumpFile
 
     private static function setSecretValuesFn(array $keys = self::SECRET_KEYS): callable
     {
-        return function (&$item, $key) use ($keys) {
+        return function (& $item, $key) use ($keys) {
             if (!is_numeric($key) && in_array($key, $keys)) {
                 $item = self::SECRET_PLACEHOLDER;
             }
