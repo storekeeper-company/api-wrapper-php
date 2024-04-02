@@ -19,7 +19,7 @@ class Auth
     /**
      * @var callable|null
      */
-    protected $revalidateCallback;
+    protected $refreshCallback;
 
     /**
      * @param array $auth
@@ -48,14 +48,14 @@ class Auth
         $this->authenticatedAt = $authenticatedAt ?? new \DateTime();
     }
 
-    public function hasRevalidateCallback(): bool
+    public function hasRefreshCallback(): bool
     {
-        return !is_null($this->revalidateCallback);
+        return !is_null($this->refreshCallback);
     }
 
-    public function setRevalidateCallback(?callable $revalidateCallback): void
+    public function setRefreshCallback(?callable $refreshCallback): void
     {
-        $this->revalidateCallback = $revalidateCallback;
+        $this->refreshCallback = $refreshCallback;
     }
 
     /**
@@ -63,8 +63,8 @@ class Auth
      */
     public function revalidate(): bool
     {
-        if ($this->hasRevalidateCallback()) {
-            $fn = $this->revalidateCallback;
+        if ($this->hasRefreshCallback()) {
+            $fn = $this->refreshCallback;
             $result = $fn($this);
 
             return !empty($result);

@@ -7,20 +7,20 @@ use StoreKeeper\ApiWrapper\Auth;
 
 class AuthTest extends TestCase
 {
-    public function testRevalidateEmpty()
+    public function testRefreshEmpty()
     {
         $auth = new Auth();
 
         $this->assertFalse($auth->revalidate());
     }
 
-    public function testRevalidateDate()
+    public function testRefreshDate()
     {
         $auth = new Auth();
 
         $newAuthDate = new \DateTime('2024-01-01');
         $newAuthHash = 'iqweqwpieipqwoieqwopie';
-        $auth->setRevalidateCallback(
+        $auth->setRefreshCallback(
             function (Auth $auth) use ($newAuthDate, $newAuthHash) {
                 $auth->setAuthenticatedAt($newAuthDate);
                 $auth->setHash($newAuthHash);
