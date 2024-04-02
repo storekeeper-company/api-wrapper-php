@@ -12,6 +12,14 @@ class Auth
      * @var array
      */
     protected $extra = [];
+    /**
+     * @var \DateTimeInterface
+     */
+    protected $authenticatedAt;
+    /**
+     * @var callable|null
+     */
+    protected $revalidateCallback;
 
     /**
      * @param array $auth
@@ -24,6 +32,45 @@ class Auth
         if (!empty($extra)) {
             $this->setExtra($extra);
         }
+        $this->setAuthenticatedAt();
+    }
+
+    /**
+     * @return \DateTime|\DateTimeInterface
+     */
+    public function getAuthenticatedAt()
+    {
+        return $this->authenticatedAt;
+    }
+
+    public function setAuthenticatedAt(?\DateTimeInterface $authenticatedAt = null): void
+    {
+        $this->authenticatedAt = $authenticatedAt ?? new \DateTime();
+    }
+
+    public function hasRevalidateCallback(): bool
+    {
+        return !is_null($this->revalidateCallback);
+    }
+
+    public function setRevalidateCallback(?callable $revalidateCallback): void
+    {
+        $this->revalidateCallback = $revalidateCallback;
+    }
+
+    /**
+     * @return bool if new auth was set
+     */
+    public function revalidate(): bool
+    {
+        if ($this->hasRevalidateCallback()) {
+            $fn = $this->revalidateCallback;
+            $result = $fn($this);
+
+            return !empty($result);
+        }
+
+        return false;
     }
 
     /**

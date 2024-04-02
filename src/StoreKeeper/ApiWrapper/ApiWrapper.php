@@ -51,6 +51,8 @@ class ApiWrapper extends ActionWrapper implements ApiWrapperInterface
         if (is_null($auth)) {
             throw new \LogicException('Auth cannot be empty for the call');
         }
+        $auth->revalidate();
+
         if (is_null($this->wrapper)) {
             throw new \LogicException('Wrapper has to be set before the call');
         }
