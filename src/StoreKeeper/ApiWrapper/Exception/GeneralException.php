@@ -7,7 +7,7 @@ class GeneralException extends \RuntimeException
     /**
      * @var string
      */
-    const error_not_found_text = 'GENERAL_ERROR';
+    public const error_not_found_text = 'GENERAL_ERROR';
     /**
      * exception class
      * should be overwritten by derived classes.
@@ -33,7 +33,7 @@ class GeneralException extends \RuntimeException
      *
      * @var string
      */
-    const class_name_tpl = 'StoreKeeper\\ApiWrapper\\Exception\\%sException';
+    public const class_name_tpl = 'StoreKeeper\\ApiWrapper\\Exception\\%sException';
 
     /**
      * @param string $class error class
@@ -58,9 +58,9 @@ class GeneralException extends \RuntimeException
      * @since 2.9
      */
     public function __construct(
-            $message, $code, $ref = '',
-            $external_trace_as_string = '',
-            \Throwable $previous = null)
+        $message, $code, $ref = '',
+        $external_trace_as_string = '',
+        \Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->ref = (string) $ref;

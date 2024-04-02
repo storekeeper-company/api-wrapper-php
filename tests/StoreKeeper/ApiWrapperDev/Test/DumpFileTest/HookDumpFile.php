@@ -7,7 +7,7 @@ use StoreKeeper\ApiWrapperDev\DumpFile\Context;
 
 class HookDumpFile extends DumpFile
 {
-    const HOOK_TYPE = 'hook';
+    public const HOOK_TYPE = 'hook';
 
     protected $hook_name;
 

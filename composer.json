@@ -40,6 +40,6 @@
         "phpunit/phpunit": "^8.5",
         "symfony/dotenv": "^5.0",
         "mikey179/vfsstream": "^1.6",
-        "friendsofphp/php-cs-fixer": "^2.18"
+        "friendsofphp/php-cs-fixer": "^3"
     }
 }

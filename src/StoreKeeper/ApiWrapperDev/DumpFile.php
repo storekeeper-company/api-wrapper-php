@@ -6,16 +6,16 @@ use StoreKeeper\ApiWrapperDev\DumpFile\Context;
 
 class DumpFile
 {
-    const SECRET_KEYS = ['password', 'secret', 'apikey', 'hash', 'pass'];
-    const SECRET_PLACEHOLDER = '(...SECRET...)';
-    const DUMP_VERSION = '1.0';
+    public const SECRET_KEYS = ['password', 'secret', 'apikey', 'hash', 'pass'];
+    public const SECRET_PLACEHOLDER = '(...SECRET...)';
+    public const DUMP_VERSION = '1.0';
 
-    const ACTION_TYPE = 'action';
-    const MODULE_TYPE = 'moduleFunction';
+    public const ACTION_TYPE = 'action';
+    public const MODULE_TYPE = 'moduleFunction';
 
-    const DUMP_TYPE_KEY = '_type';
-    const DUMP_VERSION_KEY = '_version';
-    const DUMP_TIMESTAMP_KEY = '_timestamp';
+    public const DUMP_TYPE_KEY = '_type';
+    public const DUMP_VERSION_KEY = '_version';
+    public const DUMP_TIMESTAMP_KEY = '_timestamp';
     /**
      * @var array
      */
@@ -141,7 +141,7 @@ class DumpFile
         }
     }
 
-    protected static function cleanSecretValues(array & $array, array $keys = self::SECRET_KEYS)
+    protected static function cleanSecretValues(array &$array, array $keys = self::SECRET_KEYS)
     {
         $fn = self::setSecretValuesFn($keys);
         array_walk_recursive($array, $fn);
@@ -149,7 +149,7 @@ class DumpFile
 
     private static function setSecretValuesFn(array $keys = self::SECRET_KEYS): callable
     {
-        return function (& $item, $key) use ($keys) {
+        return function (&$item, $key) use ($keys) {
             if (!is_numeric($key) && in_array($key, $keys)) {
                 $item = self::SECRET_PLACEHOLDER;
             }
