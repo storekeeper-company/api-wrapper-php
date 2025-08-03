@@ -25,7 +25,7 @@ class ListCallByIdIterator extends ListCallIterator
         $by_keys = [];
         foreach ($data as $i => &$datum) {
             if (!isset($datum[$this->key])) {
-                throw new \AssertionError("No \'data.{$this->key}\' key in result[$i]");
+                throw new \AssertionError("No 'data.{$this->key}' key in result[$i]");
             }
             $key = $datum[$this->key];
             if (array_key_exists($key, $by_keys)) {

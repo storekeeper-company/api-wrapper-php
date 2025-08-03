@@ -109,14 +109,22 @@ class ListCallIterator implements \Iterator, \Countable, \ArrayAccess
     {
         $this->ensureResult();
 
-        return $this->it->offsetGet($offset);
+        if ($this->it->offsetExists($offset)) {
+            return $this->it->offsetGet($offset);
+        }
+
+        return null;
     }
 
     protected function executeCall(): void
     {
         $result = $this->doCall();
-        $data = $this->getDataFromResult($result);
-        $this->setItFromData($data);
+        if (is_array($result)) {
+            $data = $this->getDataFromResult($result);
+            $this->setItFromData($data);
+        } else {
+            $this->setItFromData([]);
+        }
     }
 
     protected function setItFromData(array $data): void
@@ -127,14 +135,18 @@ class ListCallIterator implements \Iterator, \Countable, \ArrayAccess
     /**
      * For extending.
      */
-    protected function doCall(): array
+    protected function doCall(): mixed
     {
         return ($this->call)($this);
     }
 
     protected function getDataFromResult(array $result): array
     {
-        assert(isset($result['data']));
+        if (empty($result['data'])) {
+            $this->count = 0;
+
+            return [];
+        }
 
         if (!array_key_exists('count', $result)) {
             $this->count = count($result['data']);
