@@ -31,25 +31,17 @@ class ActionWrapper implements ActionWrapperInterface, LoggerAwareInterface
         $this->setLogger(new NullLogger());
     }
 
-    public function setWrapper(WrapperInterface $wrapper)
+    public function setWrapper(WrapperInterface $wrapper): void
     {
         $this->wrapper = $wrapper;
     }
 
-    /**
-     * @return \StoreKeeper\ApiWrapper\Wrapper\WrapperInterface
-     */
-    public function getWrapper()
+    public function getWrapper(): WrapperInterface
     {
         return $this->wrapper;
     }
 
-    /**
-     * @param $action
-     *
-     * @return mixed
-     */
-    public function callAction($action, array $params = [])
+    public function callAction(string $action, array $params = []): mixed
     {
         if (is_null($this->wrapper)) {
             throw new \LogicException('Wrapper has to be set before the call');

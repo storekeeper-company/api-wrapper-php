@@ -6,13 +6,8 @@ use StoreKeeper\ApiWrapper\Wrapper\WrapperInterface;
 
 class ApiWrapper extends ActionWrapper implements ApiWrapperInterface
 {
-    /**
-     * array of authentication info
-     * shared among all module wrappers.
-     *
-     * @var Auth
-     */
-    protected $auth;
+
+    protected ?Auth $auth = null;
 
     public function __construct(WrapperInterface $wrapper = null, Auth $auth = null)
     {
@@ -22,7 +17,7 @@ class ApiWrapper extends ActionWrapper implements ApiWrapperInterface
         }
     }
 
-    public function setAuth(Auth $auth)
+    public function setAuth(Auth $auth): void
     {
         $this->auth = $auth;
     }
@@ -35,15 +30,7 @@ class ApiWrapper extends ActionWrapper implements ApiWrapperInterface
         return $this->auth;
     }
 
-    /**
-     * @param $module_name
-     * @param $name
-     * @param $params
-     * @param Auth $auth
-     *
-     * @return mixed
-     */
-    public function callFunction($module_name, $name, array $params = [], Auth $auth = null)
+    public function callFunction(string $module_name, string $name, array $params = [], Auth $auth = null): mixed
     {
         if (is_null($auth)) {
             $auth = $this->auth;
@@ -67,11 +54,7 @@ class ApiWrapper extends ActionWrapper implements ApiWrapperInterface
             $auth);
     }
 
-    /**
-     * @param $module_name
-     * @param Auth $auth
-     */
-    public function getModule($module_name, Auth $auth = null): ModuleApiWrapperInterface
+    public function getModule(string $module_name, Auth $auth = null): ModuleApiWrapperInterface
     {
         return new ModuleApiWrapper($this, $module_name, $auth);
     }

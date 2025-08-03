@@ -23,7 +23,7 @@ class AsyncFullJsonAdapter extends FullJsonAdapter implements AsyncWrapperInterf
      *
      * @param string $server
      */
-    public function setServer($server, array $options = [])
+    public function setServer(string $server, array $options = []): void
     {
         $this->handler = new CurlMultiHandler(
             $options + [

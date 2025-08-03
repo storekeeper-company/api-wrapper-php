@@ -5,6 +5,11 @@
          colors="true"
          verbose="true"
 >
+    <coverage includeUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">src/StoreKeeper</directory>
+        </include>
+    </coverage>
     <testsuites>
         <testsuite name="unit">
             <directory>tests/</directory>

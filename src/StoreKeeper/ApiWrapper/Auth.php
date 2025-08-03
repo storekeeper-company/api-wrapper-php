@@ -4,26 +4,17 @@ namespace StoreKeeper\ApiWrapper;
 
 class Auth
 {
-    /**
-     * @var array
-     */
-    protected $auth = [];
-    /**
-     * @var array
-     */
-    protected $extra = [];
-    /**
-     * @var \DateTimeInterface
-     */
-    protected $authenticatedAt;
+
+    protected array $auth = [];
+
+    protected array $extra = [];
+
+    protected ?\DateTimeInterface $authenticatedAt = null;
     /**
      * @var callable|null
      */
     protected $refreshCallback;
 
-    /**
-     * @param array $auth
-     */
     public function __construct(array $auth = null, array $extra = null)
     {
         if (!empty($auth)) {
@@ -35,10 +26,7 @@ class Auth
         $this->setAuthenticatedAt();
     }
 
-    /**
-     * @return \DateTime|\DateTimeInterface
-     */
-    public function getAuthenticatedAt()
+    public function getAuthenticatedAt(): ?\DateTimeInterface
     {
         return $this->authenticatedAt;
     }
@@ -76,7 +64,7 @@ class Auth
     /**
      * if account login data is set.
      */
-    final public function isAccountSet()
+    final public function isAccountSet(): bool
     {
         return array_key_exists('account', $this->auth)
             && !empty($this->auth['account']);
@@ -85,21 +73,18 @@ class Auth
     /**
      * if login method data is set.
      */
-    final public function isLoginMethodSet()
+    final public function isLoginMethodSet(): bool
     {
         return array_key_exists('mode', $this->auth)
             && !empty($this->auth['mode']);
     }
 
-    public function setExtra(array $extra)
+    public function setExtra(array $extra): void
     {
         $this->extra = $extra;
     }
 
-    /**
-     * @param array $extra
-     */
-    public function addExtra($name, $data)
+    public function addExtra(string $name, mixed $data): void
     {
         $this->extra[$name] = $data;
     }
@@ -107,7 +92,7 @@ class Auth
     /**
      * @return array
      */
-    public function getExtra()
+    public function getExtra(): array
     {
         return $this->extra;
     }
@@ -118,7 +103,7 @@ class Auth
      * @param string $account account name
      * @param string $user    user login
      */
-    public function setAnonymous()
+    public function setAnonymous(): void
     {
         $this->auth['user'] = 'anonymous';
         $this->auth['rights'] = 'anonymous';
@@ -131,7 +116,7 @@ class Auth
      * @param string $account account name
      * @param string $user    user login
      */
-    public function setUser($user)
+    public function setUser($user): void
     {
         $this->auth['user'] = $user;
         $this->auth['rights'] = 'user';
@@ -144,7 +129,7 @@ class Auth
      * @param string $subaccount subaccount name
      * @param string $user       subuser login
      */
-    public function setSubuser($subaccount, $user)
+    public function setSubuser($subaccount, $user): void
     {
         $this->auth['user'] = $user;
         $this->auth['subaccount'] = $subaccount;
@@ -154,12 +139,12 @@ class Auth
     /**
      * @param string $name account to use
      */
-    public function setAccount($name)
+    public function setAccount($name): void
     {
         $this->auth['account'] = $name;
     }
 
-    public function getAccount()
+    public function getAccount(): ?string
     {
         return $this->auth['account'];
     }
@@ -169,7 +154,7 @@ class Auth
      *
      * @param string $hash hash got before
      */
-    public function setHash($hash)
+    public function setHash($hash): void
     {
         $this->auth['hash'] = $hash;
         $this->auth['mode'] = 'hash';
@@ -180,7 +165,7 @@ class Auth
      *
      * @param string $password hash got before
      */
-    public function setPassword($password)
+    public function setPassword($password): void
     {
         $this->auth['password'] = $password;
         $this->auth['mode'] = 'password';
@@ -191,7 +176,7 @@ class Auth
      *
      * @param string $apikey hash got before
      */
-    public function setApiKey($apikey)
+    public function setApiKey($apikey): void
     {
         $this->auth['apikey'] = $apikey;
         $this->auth['mode'] = 'apikey';
@@ -200,7 +185,7 @@ class Auth
     /**
      * @param string $name
      */
-    public function setClientName($name = 'Php Wrappers')
+    public function setClientName($name = 'Php Wrappers'): void
     {
         $this->auth['client_name'] = $name;
     }
@@ -208,7 +193,7 @@ class Auth
     /**
      * @return mixed
      */
-    public function getClientName()
+    public function getClientName(): ?string
     {
         return $this->auth['client_name'];
     }
@@ -216,7 +201,7 @@ class Auth
     /**
      * @param string $ip
      */
-    public function setClientIp($ip = null)
+    public function setClientIp($ip = null): void
     {
         if (empty($ip) && array_key_exists('REMOTE_ADDR', $_SERVER)) {
             $ip = $_SERVER['REMOTE_ADDR'];
@@ -233,7 +218,7 @@ class Auth
     /**
      * @return mixed
      */
-    public function getClientIp()
+    public function getClientIp(): ?string
     {
         if (!array_key_exists('user_ip', $this->auth)) {
             $this->setClientIp();
@@ -242,15 +227,12 @@ class Auth
         return $this->auth['user_ip'];
     }
 
-    /**
-     * @param array $auth
-     */
-    public function isValid()
+    public function isValid(): bool
     {
         return $this->isAccountSet() && $this->isLoginMethodSet();
     }
 
-    public function setAuth(array $auth)
+    public function setAuth(array $auth): void
     {
         $this->auth = $auth;
     }
@@ -258,7 +240,7 @@ class Auth
     /**
      * @return array
      */
-    public function getAuth()
+    public function getAuth(): array
     {
         return $this->auth;
     }

@@ -30,7 +30,7 @@ trait PaginatedIteratorTrait
         return $this->start;
     }
 
-    public function onNextInvalid()
+    public function onNextInvalid(): void
     {
         if ($this->maybeHasMore()) {
             // there was something lets try again

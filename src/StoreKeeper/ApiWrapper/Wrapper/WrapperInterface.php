@@ -4,41 +4,19 @@ namespace StoreKeeper\ApiWrapper\Wrapper;
 
 use StoreKeeper\ApiWrapper\Auth;
 
-interface WrapperInterface
+interface WrapperInterface extends \Stringable
 {
     /**
      * sets server to connect to.
-     *
-     * @param string $server
-     *
-     * @return
      */
-    public function setServer($server, array $options = []);
+    public function setServer(string $server, array $options = []): void;
 
     public function getServer(): string;
 
     public function getResourceUrl(): string;
 
-    /**
-     * @param $module
-     * @param $name
-     * @param $params
-     * @param $auth
-     *
-     * @return mixed
-     */
-    public function call($module, $name, $params, Auth $auth);
+    public function call(string $module, string $name, array $params, Auth $auth): mixed;
 
-    /**
-     * @param $action
-     * @param $params
-     *
-     * @return mixed
-     */
-    public function callAction($action, $params);
+    public function callAction(string $action, array $params = []): mixed;
 
-    /**
-     * @return string
-     */
-    public function __toString();
 }

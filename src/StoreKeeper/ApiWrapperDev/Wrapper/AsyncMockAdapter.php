@@ -10,9 +10,9 @@ use StoreKeeper\ApiWrapper\Wrapper\AsyncWrapperInterface;
 
 class AsyncMockAdapter extends MockAdapter implements AsyncWrapperInterface
 {
-    protected $onTick = [];
+    protected array $onTick = [];
 
-    public function callAction($action, $params): PromiseInterface
+    public function callAction(string $action, array $params = []): Promise
     {
         $promise = new Promise();
 
@@ -26,7 +26,7 @@ class AsyncMockAdapter extends MockAdapter implements AsyncWrapperInterface
         return $promise;
     }
 
-    public function call($module, $name, $params, Auth $auth): PromiseInterface
+    public function call(string $module, string $name, array $params, Auth $auth): Promise
     {
         $promise = new Promise();
 
@@ -40,7 +40,7 @@ class AsyncMockAdapter extends MockAdapter implements AsyncWrapperInterface
         return $promise;
     }
 
-    public function doTheTick()
+    public function doTheTick(): void
     {
         $onTick = $this->onTick;
         $this->onTick = [];

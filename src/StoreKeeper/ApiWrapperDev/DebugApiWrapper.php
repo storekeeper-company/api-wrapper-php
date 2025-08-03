@@ -75,7 +75,7 @@ class DebugApiWrapper extends ApiWrapper
         return $return;
     }
 
-    public function callAction($action, array $params = [])
+    public function callAction(string $action, array $params = []): mixed
     {
         return $this->withDebug(DumpFile::ACTION_TYPE, function (\ArrayObject $context) use ($action, $params) {
             $context['action'] = $action;
@@ -85,7 +85,7 @@ class DebugApiWrapper extends ApiWrapper
         });
     }
 
-    public function callFunction($module_name, $name, array $params = [], Auth $auth = null)
+    public function callFunction(string $module_name, string $name, array $params = [], Auth $auth = null): mixed
     {
         return $this->withDebug(DumpFile::MODULE_TYPE, function (\ArrayObject $context) use ($module_name, $name, $params, $auth) {
             $context['module_name'] = $module_name;

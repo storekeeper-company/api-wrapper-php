@@ -42,7 +42,7 @@ class FullJsonAdapter implements WrapperInterface
      *
      * @param string $server
      */
-    public function setServer($server, array $options = [])
+    public function setServer(string $server, array $options = []): void
     {
         $this->server = $server;
         $this->client = new Client($options + $this->getDefaultConfig($server));
@@ -82,25 +82,25 @@ class FullJsonAdapter implements WrapperInterface
     }
 
     /**
-     * @param $module
-     * @param $function
-     * @param $params
+     * @param string $module
+     * @param string $name
+     * @param array $params
      * @param $auth
      *
-     * @return mixed
+     * @return array|null
      */
-    public function call($module, $function, $params, Auth $auth)
+    public function call(string $module, string $name, array $params, Auth $auth): mixed
     {
         if (!$auth->isValid()) {
             throw new \LogicException('Auth is not properly setup');
         }
-        $url = $this->makeApiRequestPath($module, $function);
+        $url = $this->makeApiRequestPath($module, $name);
         $params = [
             'auth' => $auth->getAuth(),
             'params' => $params,
         ];
 
-        return $this->callUrl($url, $params, "$module::$function");
+        return $this->callUrl($url, $params, "$module::$name");
     }
 
     /**
@@ -140,12 +140,12 @@ class FullJsonAdapter implements WrapperInterface
     }
 
     /**
-     * @param $action
-     * @param $params
+     * @param string $action
+     * @param array $params
      *
-     * @return mixed
+     * @return array|null
      */
-    public function callAction($action, $params)
+    public function callAction(string $action, array $params = []): ?array
     {
         return $this->callUrl($this->makeActionPath($action), $params, "Action($action)");
     }

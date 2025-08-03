@@ -65,7 +65,7 @@ class MockAdapter implements WrapperInterface, LoggerAwareInterface
         $this->setLogger(new NullLogger());
     }
 
-    public function setServer($server, array $options = [])
+    public function setServer(string $server, array $options = []): void
     {
         $this->logger->debug('setServer', [
             'server' => $server,
@@ -73,7 +73,7 @@ class MockAdapter implements WrapperInterface, LoggerAwareInterface
         ]);
     }
 
-    public function callAction($action, $params)
+    public function callAction(string $action, array $params = []): mixed
     {
         if (!array_key_exists($action, $this->registered_actions)) {
             throw new \Exception("Action $action is not registered");
@@ -111,15 +111,15 @@ class MockAdapter implements WrapperInterface, LoggerAwareInterface
     }
 
     /**
-     * @param $module
-     * @param $name
-     * @param $params
+     * @param string $module
+     * @param string $name
+     * @param array $params
      *
-     * @return mixed
+     * @return array|null
      *
      * @throws \Exception
      */
-    public function call($module, $name, $params, Auth $auth)
+    public function call(string $module, string $name, array $params, Auth $auth): mixed
     {
         if (!array_key_exists($module, $this->registered_modules)) {
             throw new \Exception("Action $module is not registered");

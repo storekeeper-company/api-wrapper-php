@@ -11,15 +11,7 @@ interface ActionWrapperInterface
 {
     public function setWrapper(WrapperInterface $wrapper);
 
-    /**
-     * @return \StoreKeeper\ApiWrapper\Wrapper\WrapperInterface
-     */
-    public function getWrapper();
+    public function getWrapper(): WrapperInterface;
 
-    /**
-     * @param $action
-     *
-     * @return mixed
-     */
-    public function callAction($action, array $params = []);
+    public function callAction(string $action, array $params = []): mixed;
 }
