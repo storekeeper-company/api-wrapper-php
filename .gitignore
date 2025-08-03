@@ -8,3 +8,4 @@ config/
 .env.test.local
 .php_cs.cache
 .php-cs-fixer.cache
+CLAUDE.md

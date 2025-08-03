@@ -3,6 +3,7 @@
 namespace StoreKeeper\ApiWrapper\Wrapper;
 
 use GuzzleHttp\Client;
+use Psr\Log\LoggerInterface;
 use StoreKeeper\ApiWrapper\Auth;
 use StoreKeeper\ApiWrapper\Exception\GeneralException;
 
@@ -15,33 +16,17 @@ class FullJsonAdapter implements WrapperInterface
         }
     }
 
-    /**
-     * @var Client
-     */
-    protected $client;
-    /**
-     * @var string
-     */
-    protected $server;
+    protected ?Client $client = null;
 
-    /**
-     * @var
-     */
-    protected $logger;
+    protected string $server = '';
 
-    /**
-     * @param $logger
-     */
-    public function setLogger($logger)
+    protected LoggerInterface $logger;
+
+    public function setLogger(LoggerInterface $logger): void
     {
         $this->logger = $logger;
     }
 
-    /**
-     * sets server to connect to.
-     *
-     * @param string $server
-     */
     public function setServer(string $server, array $options = []): void
     {
         $this->server = $server;
@@ -58,37 +43,17 @@ class FullJsonAdapter implements WrapperInterface
         return $this->getServer();
     }
 
-    /**
-     * @param $module
-     * @param $function
-     *
-     * @return string
-     */
-    protected function makeActionPath($action)
+    protected function makeActionPath(string $action): string
     {
         return '/?action='.urlencode($action).'&api=fulljson';
     }
 
-    /**
-     * @param $module
-     * @param $function
-     *
-     * @return string
-     */
-    protected function makeApiRequestPath($module, $function)
+    protected function makeApiRequestPath(string $module, string $function)
     {
         return $this->makeActionPath('request')
         .'&module='.urlencode($module).'&function='.urlencode($function);
     }
 
-    /**
-     * @param string $module
-     * @param string $name
-     * @param array $params
-     * @param $auth
-     *
-     * @return array|null
-     */
     public function call(string $module, string $name, array $params, Auth $auth): mixed
     {
         if (!$auth->isValid()) {
@@ -103,13 +68,7 @@ class FullJsonAdapter implements WrapperInterface
         return $this->callUrl($url, $params, "$module::$name");
     }
 
-    /**
-     * @param $action
-     * @param $params
-     *
-     * @return mixed
-     */
-    public function callUrl($url, $params, $name)
+    public function callUrl(string $url, array $params, string $name): mixed
     {
         if (!empty($this->logger)) {
             $time_start = microtime(true);
@@ -139,13 +98,8 @@ class FullJsonAdapter implements WrapperInterface
         return $response_body['response'];
     }
 
-    /**
-     * @param string $action
-     * @param array $params
-     *
-     * @return array|null
-     */
-    public function callAction(string $action, array $params = []): ?array
+
+    public function callAction(string $action, array $params = []): mixed
     {
         return $this->callUrl($this->makeActionPath($action), $params, "Action($action)");
     }
