@@ -30,9 +30,9 @@ class ListCallByIdIteratorTest extends TestCase
             $keys[] = $key;
         }
 
-        $this->assertEquals($expectedItems, $items);
-        $this->assertEquals($expectedKeys, $keys);
-        $this->assertEquals(1, $callCount, 'Call should be executed only once');
+        $this->assertEquals($expectedItems, $items, 'Items should be keyed by ID field');
+        $this->assertEquals($expectedKeys, $keys, 'Iterator keys should match ID values');
+        $this->assertEquals(1, $callCount, 'Backend call should be executed only once (lazy loading)');
     }
 
     public function foreachWithIdsDataProvider(): array
@@ -78,7 +78,7 @@ class ListCallByIdIteratorTest extends TestCase
         $iterator = new ListCallByIdIterator($mockCall);
 
         $ids = $iterator->getIds();
-        $this->assertEquals([10, 20, 30], $ids);
+        $this->assertEquals([10, 20, 30], $ids, 'getIds() should return all ID values in order');
     }
 
     public function testCustomKeyField(): void
@@ -105,8 +105,8 @@ class ListCallByIdIteratorTest extends TestCase
             'abc-123' => ['uuid' => 'abc-123', 'name' => 'First'],
             'def-456' => ['uuid' => 'def-456', 'name' => 'Second'],
         ];
-        $this->assertEquals($expectedItems, $items);
-        $this->assertEquals(['abc-123', 'def-456'], $iterator->getIds());
+        $this->assertEquals($expectedItems, $items, 'Iterator should use custom key field for array keys');
+        $this->assertEquals(['abc-123', 'def-456'], $iterator->getIds(), 'getIds() should return values from custom key field');
     }
 
     public function testDuplicateKeyError(): void
@@ -126,7 +126,6 @@ class ListCallByIdIteratorTest extends TestCase
         $this->expectException(\AssertionError::class);
         $this->expectExceptionMessage("Duplicate key 'id' for result[1]");
 
-        // Trigger execution
         $iterator->current();
     }
 
@@ -147,7 +146,6 @@ class ListCallByIdIteratorTest extends TestCase
         $this->expectException(\AssertionError::class);
         $this->expectExceptionMessage("No 'data.id' key in result[1]");
 
-        // Trigger execution
         $iterator->current();
     }
 
@@ -168,7 +166,6 @@ class ListCallByIdIteratorTest extends TestCase
         $this->expectException(\AssertionError::class);
         $this->expectExceptionMessage("No 'data.uuid' key in result[1]");
 
-        // Trigger execution
         $iterator->current();
     }
 
@@ -187,15 +184,13 @@ class ListCallByIdIteratorTest extends TestCase
 
         $iterator = new ListCallByIdIterator($mockCall);
 
-        // Test offsetExists with ID keys
-        $this->assertTrue($iterator->offsetExists(10));
-        $this->assertTrue($iterator->offsetExists(20));
-        $this->assertFalse($iterator->offsetExists(30));
+        $this->assertTrue($iterator->offsetExists(10), 'offsetExists should return true for existing ID 10');
+        $this->assertTrue($iterator->offsetExists(20), 'offsetExists should return true for existing ID 20');
+        $this->assertFalse($iterator->offsetExists(30), 'offsetExists should return false for non-existent ID 30');
 
-        // Test offsetGet with ID keys
-        $this->assertEquals(['id' => 10, 'name' => 'First'], $iterator->offsetGet(10));
-        $this->assertEquals(['id' => 20, 'name' => 'Second'], $iterator->offsetGet(20));
-        $this->assertNull($iterator->offsetGet(30));
+        $this->assertEquals(['id' => 10, 'name' => 'First'], $iterator->offsetGet(10), 'offsetGet(10) should return item with ID 10');
+        $this->assertEquals(['id' => 20, 'name' => 'Second'], $iterator->offsetGet(20), 'offsetGet(20) should return item with ID 20');
+        $this->assertNull($iterator->offsetGet(30), 'offsetGet(30) should return null for non-existent ID');
     }
 
     public function testCountAndIsExecuted(): void
@@ -217,10 +212,10 @@ class ListCallByIdIteratorTest extends TestCase
 
         $iterator = new ListCallByIdIterator($mockCall);
 
-        $this->assertFalse($iterator->isExecuted());
-        $this->assertCount(3, $iterator);
-        $this->assertTrue($iterator->isExecuted());
-        $this->assertEquals(1, $callCount);
+        $this->assertFalse($iterator->isExecuted(), 'Iterator should not be executed before first access');
+        $this->assertCount(3, $iterator, 'Count should return 3 items');
+        $this->assertTrue($iterator->isExecuted(), 'Iterator should be marked as executed after count()');
+        $this->assertEquals(1, $callCount, 'Backend should be called exactly once');
     }
 
     public function testEmptyConstructorKeyParameter(): void
@@ -233,12 +228,10 @@ class ListCallByIdIteratorTest extends TestCase
             return $mockData;
         };
 
-        // Test with null key (should use default 'id')
         $iterator = new ListCallByIdIterator($mockCall, null);
-        $this->assertEquals([1], $iterator->getIds());
+        $this->assertEquals([1], $iterator->getIds(), 'Null key parameter should default to "id" field');
 
-        // Test with empty string (should use default 'id')
         $iterator2 = new ListCallByIdIterator($mockCall, '');
-        $this->assertEquals([1], $iterator2->getIds());
+        $this->assertEquals([1], $iterator2->getIds(), 'Empty string key parameter should default to "id" field');
     }
 }

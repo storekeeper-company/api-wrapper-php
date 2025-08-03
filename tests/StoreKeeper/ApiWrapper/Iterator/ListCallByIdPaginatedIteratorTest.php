@@ -13,7 +13,6 @@ class ListCallByIdPaginatedIteratorTest extends TestCase
     {
         $callCount = 0;
         $pages = [
-            // First page
             [
                 'data' => [
                     ['id' => 10, 'name' => 'Item 10'],
@@ -22,7 +21,6 @@ class ListCallByIdPaginatedIteratorTest extends TestCase
                 ],
                 'count' => 3,
             ],
-            // Second page
             [
                 'data' => [
                     ['id' => 40, 'name' => 'Item 40'],
@@ -37,7 +35,7 @@ class ListCallByIdPaginatedIteratorTest extends TestCase
         };
 
         $iterator = new ListCallByIdPaginatedIterator($mockCall);
-        $iterator->setPerPage(3); // Small page size to trigger pagination
+        $iterator->setPerPage(3);
 
         $items = [];
         $keys = [];
@@ -54,21 +52,19 @@ class ListCallByIdPaginatedIteratorTest extends TestCase
             50 => ['id' => 50, 'name' => 'Item 50'],
         ];
 
-        $this->assertEquals($expectedItems, $items);
-        $this->assertEquals([10, 20, 30, 40, 50], $keys);
-        $this->assertEquals(2, $callCount, 'Should make 2 calls for paginated data');
+        $this->assertEquals($expectedItems, $items, 'Items should be keyed by ID across all pages');
+        $this->assertEquals([10, 20, 30, 40, 50], $keys, 'Keys should contain all IDs in order');
+        $this->assertEquals(2, $callCount, 'Should make 2 backend calls for paginated data');
     }
 
     public function testGetIdsAcrossPages(): void
     {
         $callCount = 0;
         $pages = [
-            // First page - full page
             [
                 'data' => array_map(fn ($i) => ['id' => $i * 10, 'value' => "Val$i"], range(1, 100)),
                 'count' => 100,
             ],
-            // Second page - partial page
             [
                 'data' => array_map(fn ($i) => ['id' => $i * 10, 'value' => "Val$i"], range(101, 150)),
                 'count' => 50,
@@ -81,23 +77,19 @@ class ListCallByIdPaginatedIteratorTest extends TestCase
 
         $iterator = new ListCallByIdPaginatedIterator($mockCall);
 
-        // First, get IDs before full iteration
         $idsBeforeIteration = $iterator->getIds();
-        $this->assertCount(100, $idsBeforeIteration); // Only first page loaded
+        $this->assertCount(100, $idsBeforeIteration, 'getIds() should return 100 IDs from first page before iteration');
 
-        // Now iterate through all items
         $items = [];
         foreach ($iterator as $id => $item) {
             $items[$id] = $item;
         }
 
-        // Get IDs after full iteration - only returns IDs from current page
         $idsAfterIteration = $iterator->getIds();
-        $this->assertCount(50, $idsAfterIteration); // Only last page IDs
+        $this->assertCount(50, $idsAfterIteration, 'getIds() should return only 50 IDs from last loaded page');
 
-        // Verify last page IDs
         $expectedIds = array_map(fn ($i) => $i * 10, range(101, 150));
-        $this->assertEquals($expectedIds, $idsAfterIteration);
+        $this->assertEquals($expectedIds, $idsAfterIteration, 'IDs should match expected values from last page');
     }
 
     public function testIdContinuityAcrossPages(): void
@@ -108,7 +100,6 @@ class ListCallByIdPaginatedIteratorTest extends TestCase
             $start = $iterator->getStart();
             $perPage = $iterator->getPerPage();
 
-            // Generate unique IDs based on page
             $baseId = ($start / $perPage * 1000) + 1;
             $data = array_map(
                 fn ($i) => ['id' => $baseId + $i, 'page' => $callCount],
@@ -135,7 +126,7 @@ class ListCallByIdPaginatedIteratorTest extends TestCase
             }
 
             if (count($seenIds) >= 30) {
-                break; // Stop after 3 pages
+                break;
             }
         }
 
@@ -153,14 +144,14 @@ class ListCallByIdPaginatedIteratorTest extends TestCase
                     ['uuid' => 'abc-2', 'name' => 'Second'],
                     ['uuid' => 'abc-3', 'name' => 'Third'],
                 ],
-                'count' => 3,  // Full page - will trigger pagination
+                'count' => 3,
             ],
             [
                 'data' => [
                     ['uuid' => 'def-4', 'name' => 'Fourth'],
                     ['uuid' => 'def-5', 'name' => 'Fifth'],
                 ],
-                'count' => 2,  // Less than per_page - no more pages
+                'count' => 2,
             ],
         ];
 
@@ -188,9 +179,8 @@ class ListCallByIdPaginatedIteratorTest extends TestCase
             'def-5' => ['uuid' => 'def-5', 'name' => 'Fifth'],
         ];
 
-        $this->assertEquals($expectedItems, $items);
-        // getIds() only returns IDs from the last loaded page
-        $this->assertEquals(['def-4', 'def-5'], $iterator->getIds());
+        $this->assertEquals($expectedItems, $items, 'Items should use custom UUID field as keys');
+        $this->assertEquals(['def-4', 'def-5'], $iterator->getIds(), 'getIds() should return UUIDs from last loaded page');
     }
 
     public function testSinglePageWithFullData(): void
@@ -212,10 +202,10 @@ class ListCallByIdPaginatedIteratorTest extends TestCase
             $items[$id] = $item;
         }
 
-        $this->assertCount(2, $items);
-        $this->assertArrayHasKey(100, $items);
-        $this->assertArrayHasKey(200, $items);
-        $this->assertFalse($iterator->maybeHasMore());
+        $this->assertCount(2, $items, 'Should return 2 items');
+        $this->assertArrayHasKey(100, $items, 'Item with ID 100 should exist');
+        $this->assertArrayHasKey(200, $items, 'Item with ID 200 should exist');
+        $this->assertFalse($iterator->maybeHasMore(), 'Should not indicate more data for partial page');
     }
 
     public function testEmptyFirstPage(): void
@@ -234,9 +224,9 @@ class ListCallByIdPaginatedIteratorTest extends TestCase
             $items[] = $item;
         }
 
-        $this->assertEmpty($items);
-        $this->assertEquals(1, $callCount, 'Should only make one call for empty data');
-        $this->assertEmpty($iterator->getIds());
+        $this->assertEmpty($items, 'Empty page should yield no items');
+        $this->assertEquals(1, $callCount, 'Should only make one backend call for empty data');
+        $this->assertEmpty($iterator->getIds(), 'getIds() should return empty array for empty data');
     }
 
     public function testPaginationBehaviorWithMethods(): void
@@ -269,27 +259,23 @@ class ListCallByIdPaginatedIteratorTest extends TestCase
         $iterator = new ListCallByIdPaginatedIterator($mockCall);
         $iterator->setPerPage(3);
 
-        // Test initial state
-        $this->assertEquals(0, $iterator->getStart());
-        $this->assertEquals(3, $iterator->getPerPage());
-        $this->assertFalse($iterator->isExecuted());
+        $this->assertEquals(0, $iterator->getStart(), 'Initial start offset should be 0');
+        $this->assertEquals(3, $iterator->getPerPage(), 'Page size should be 3');
+        $this->assertFalse($iterator->isExecuted(), 'Iterator should not be executed initially');
 
-        // Access first element
         $first = $iterator->current();
-        $this->assertEquals(['id' => 'first-1', 'value' => 1], $first);
-        $this->assertTrue($iterator->isExecuted());
-        $this->assertEquals(1, $callCount);
+        $this->assertEquals(['id' => 'first-1', 'value' => 1], $first, 'First element should match expected data');
+        $this->assertTrue($iterator->isExecuted(), 'Iterator should be executed after current()');
+        $this->assertEquals(1, $callCount, 'Should make one backend call after first access');
 
-        // Complete iteration
         $allItems = [];
         foreach ($iterator as $id => $item) {
             $allItems[$id] = $item;
         }
 
-        $this->assertCount(5, $allItems);
-        $this->assertEquals(2, $callCount);
-        // getIds() only returns IDs from the last loaded page
-        $this->assertEquals(['second-1', 'second-2'], $iterator->getIds());
+        $this->assertCount(5, $allItems, 'Should load all 5 items across 2 pages');
+        $this->assertEquals(2, $callCount, 'Should make 2 backend calls total');
+        $this->assertEquals(['second-1', 'second-2'], $iterator->getIds(), 'getIds() should return only IDs from last page');
     }
 
     public function testArrayAccessWithPaginatedIds(): void
@@ -307,18 +293,16 @@ class ListCallByIdPaginatedIteratorTest extends TestCase
         $iterator = new ListCallByIdPaginatedIterator($mockCall);
         $iterator->setPerPage(2);
 
-        // Force load all pages
         foreach ($iterator as $item) {
-            // iterate
+            // iterate to load all pages
         }
 
-        // Test array access with ID keys - only last page is accessible
-        $this->assertFalse($iterator->offsetExists(10)); // From first page
-        $this->assertFalse($iterator->offsetExists(20)); // From first page
-        $this->assertTrue($iterator->offsetExists(30)); // From last page
-        $this->assertFalse($iterator->offsetExists(40));
+        $this->assertFalse($iterator->offsetExists(10), 'ID 10 from first page should not be accessible');
+        $this->assertFalse($iterator->offsetExists(20), 'ID 20 from first page should not be accessible');
+        $this->assertTrue($iterator->offsetExists(30), 'ID 30 from last page should be accessible');
+        $this->assertFalse($iterator->offsetExists(40), 'Non-existent ID 40 should return false');
 
-        $this->assertNull($iterator->offsetGet(10)); // From first page
-        $this->assertEquals(['id' => 30, 'val' => 'C'], $iterator->offsetGet(30)); // From last page
+        $this->assertNull($iterator->offsetGet(10), 'offsetGet(10) should return null for ID from first page');
+        $this->assertEquals(['id' => 30, 'val' => 'C'], $iterator->offsetGet(30), 'offsetGet(30) should return item from last page');
     }
 }

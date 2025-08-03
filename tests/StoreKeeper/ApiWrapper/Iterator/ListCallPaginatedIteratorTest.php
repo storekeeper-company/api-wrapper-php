@@ -31,27 +31,24 @@ class ListCallPaginatedIteratorTest extends TestCase
             $items[] = $item;
         }
 
-        $this->assertCount(2, $items);
-        $this->assertEquals(['id' => 1, 'name' => 'Item 1'], $items[0]);
-        $this->assertEquals(['id' => 2, 'name' => 'Item 2'], $items[1]);
-        $this->assertEquals(1, $callCount, 'Should only make one call for data that fits in one page');
+        $this->assertCount(2, $items, 'Single page should return 2 items');
+        $this->assertEquals(['id' => 1, 'name' => 'Item 1'], $items[0], 'First item should match expected data');
+        $this->assertEquals(['id' => 2, 'name' => 'Item 2'], $items[1], 'Second item should match expected data');
+        $this->assertEquals(1, $callCount, 'Should only make one backend call for data that fits in one page');
     }
 
     public function testForeachLoopMultiplePages(): void
     {
         $callCount = 0;
         $pages = [
-            // First page - full page (100 items)
             [
                 'data' => array_map(fn ($i) => ['id' => $i, 'name' => "Item $i"], range(1, 100)),
                 'count' => 100,
             ],
-            // Second page - full page (100 items)
             [
                 'data' => array_map(fn ($i) => ['id' => $i, 'name' => "Item $i"], range(101, 200)),
                 'count' => 100,
             ],
-            // Third page - partial page (50 items)
             [
                 'data' => array_map(fn ($i) => ['id' => $i, 'name' => "Item $i"], range(201, 250)),
                 'count' => 50,
@@ -72,17 +69,16 @@ class ListCallPaginatedIteratorTest extends TestCase
             $items[] = $item;
         }
 
-        $this->assertCount(250, $items);
-        $this->assertEquals(['id' => 1, 'name' => 'Item 1'], $items[0]);
-        $this->assertEquals(['id' => 100, 'name' => 'Item 100'], $items[99]);
-        $this->assertEquals(['id' => 101, 'name' => 'Item 101'], $items[100]);
-        $this->assertEquals(['id' => 250, 'name' => 'Item 250'], $items[249]);
-        $this->assertEquals(3, $callCount, 'Should make 3 calls for 250 items');
+        $this->assertCount(250, $items, 'Should load all 250 items across pages');
+        $this->assertEquals(['id' => 1, 'name' => 'Item 1'], $items[0], 'First item should be from first page');
+        $this->assertEquals(['id' => 100, 'name' => 'Item 100'], $items[99], 'Last item of first page should be ID 100');
+        $this->assertEquals(['id' => 101, 'name' => 'Item 101'], $items[100], 'First item of second page should be ID 101');
+        $this->assertEquals(['id' => 250, 'name' => 'Item 250'], $items[249], 'Last item should be ID 250');
+        $this->assertEquals(3, $callCount, 'Should make 3 backend calls for 250 items split across pages');
     }
 
     public function testMaybeHasMore(): void
     {
-        // Test with full page (may have more)
         $mockCall = function () {
             return [
                 'data' => array_map(fn ($i) => ['id' => $i], range(1, 100)),
@@ -90,10 +86,9 @@ class ListCallPaginatedIteratorTest extends TestCase
             ];
         };
         $iterator = new ListCallPaginatedIterator($mockCall);
-        $iterator->count(); // Trigger execution
-        $this->assertTrue($iterator->maybeHasMore());
+        $iterator->count();
+        $this->assertTrue($iterator->maybeHasMore(), 'Full page (100 items) should indicate more data may exist');
 
-        // Test with partial page (no more)
         $mockCall2 = function () {
             return [
                 'data' => array_map(fn ($i) => ['id' => $i], range(1, 50)),
@@ -101,16 +96,15 @@ class ListCallPaginatedIteratorTest extends TestCase
             ];
         };
         $iterator2 = new ListCallPaginatedIterator($mockCall2);
-        $iterator2->count(); // Trigger execution
-        $this->assertFalse($iterator2->maybeHasMore());
+        $iterator2->count();
+        $this->assertFalse($iterator2->maybeHasMore(), 'Partial page (50 items) should indicate no more data');
 
-        // Test with empty result
         $mockCall3 = function () {
             return ['data' => [], 'count' => 0];
         };
         $iterator3 = new ListCallPaginatedIterator($mockCall3);
-        $iterator3->count(); // Trigger execution
-        $this->assertFalse($iterator3->maybeHasMore());
+        $iterator3->count();
+        $this->assertFalse($iterator3->maybeHasMore(), 'Empty result should indicate no more data');
     }
 
     public function testSetPerPage(): void
@@ -121,7 +115,6 @@ class ListCallPaginatedIteratorTest extends TestCase
             $perPage = $iterator->getPerPage();
             $start = $iterator->getStart();
 
-            // Return data based on per_page setting
             $data = array_map(
                 fn ($i) => ['id' => $i],
                 range($start + 1, $start + $perPage)
@@ -134,19 +127,19 @@ class ListCallPaginatedIteratorTest extends TestCase
         };
 
         $iterator = new ListCallPaginatedIterator($mockCall);
-        $iterator->setPerPage(10); // Set smaller page size
+        $iterator->setPerPage(10);
 
         $items = [];
         foreach ($iterator as $item) {
             $items[] = $item;
             if (count($items) >= 30) {
-                break; // Stop after 30 items
+                break;
             }
         }
 
-        $this->assertEquals(10, $iterator->getPerPage());
-        $this->assertCount(30, $items);
-        $this->assertGreaterThanOrEqual(3, $callCount, 'Should make multiple calls with smaller page size');
+        $this->assertEquals(10, $iterator->getPerPage(), 'getPerPage() should return configured page size');
+        $this->assertCount(30, $items, 'Should collect exactly 30 items');
+        $this->assertGreaterThanOrEqual(3, $callCount, 'Should make at least 3 backend calls with page size of 10');
     }
 
     public function testGetStart(): void
@@ -171,24 +164,22 @@ class ListCallPaginatedIteratorTest extends TestCase
 
         $iterator = new ListCallPaginatedIterator($mockCall);
 
-        $this->assertEquals(0, $iterator->getStart());
+        $this->assertEquals(0, $iterator->getStart(), 'Initial start offset should be 0');
 
         $items = [];
         foreach ($iterator as $item) {
             $items[] = $item;
         }
 
-        $this->assertCount(150, $items);
-        $this->assertEquals(100, $iterator->getStart()); // Should be at 100 after first page
+        $this->assertCount(150, $items, 'Should load all 150 items across two pages');
+        $this->assertEquals(100, $iterator->getStart(), 'Start offset should be 100 after loading first page of 100 items');
     }
 
     public function testEmptyPages(): void
     {
         $callCount = 0;
         $pages = [
-            // First page with data
             ['data' => [['id' => 1], ['id' => 2]], 'count' => 2],
-            // Second call returns empty (no more data)
             ['data' => [], 'count' => 0],
         ];
 
@@ -207,17 +198,15 @@ class ListCallPaginatedIteratorTest extends TestCase
             $items[] = $item;
         }
 
-        $this->assertCount(2, $items);
-        $this->assertEquals(1, $callCount, 'Should stop after receiving partial page');
+        $this->assertCount(2, $items, 'Should return only 2 items from first page');
+        $this->assertEquals(1, $callCount, 'Should stop pagination after receiving partial page');
     }
 
     public function testPaginationWithExactPageBoundary(): void
     {
         $callCount = 0;
         $pages = [
-            // Exactly 100 items (full page)
             ['data' => array_map(fn ($i) => ['id' => $i], range(1, 100)), 'count' => 100],
-            // Empty second page
             ['data' => [], 'count' => 0],
         ];
 
@@ -232,8 +221,8 @@ class ListCallPaginatedIteratorTest extends TestCase
             $items[] = $item;
         }
 
-        $this->assertCount(100, $items);
-        $this->assertEquals(2, $callCount, 'Should make second call to check for more data');
+        $this->assertCount(100, $items, 'Should return exactly 100 items');
+        $this->assertEquals(2, $callCount, 'Should make second call to check for more data when page is exactly full');
     }
 
     public function testCountWithPagination(): void
@@ -255,16 +244,14 @@ class ListCallPaginatedIteratorTest extends TestCase
 
         $iterator = new ListCallPaginatedIterator($mockCall);
 
-        // Count should reflect current page
-        $this->assertEquals(100, $iterator->count());
+        $this->assertEquals(100, $iterator->count(), 'count() should return current page count (100)');
 
-        // Iterate to load next page
         $items = [];
         foreach ($iterator as $item) {
             $items[] = $item;
         }
 
-        $this->assertCount(125, $items);
+        $this->assertCount(125, $items, 'Should load all 125 items across both pages');
     }
 
     public function testIsExecutedWithPagination(): void
@@ -281,18 +268,16 @@ class ListCallPaginatedIteratorTest extends TestCase
 
         $iterator = new ListCallPaginatedIterator($mockCall);
 
-        $this->assertFalse($iterator->isExecuted());
+        $this->assertFalse($iterator->isExecuted(), 'Iterator should not be executed before first access');
 
-        // Trigger first execution
         $iterator->current();
-        $this->assertTrue($iterator->isExecuted());
-        $this->assertEquals(1, $callCount);
+        $this->assertTrue($iterator->isExecuted(), 'Iterator should be marked as executed after current()');
+        $this->assertEquals(1, $callCount, 'Should make one backend call on first access');
 
-        // Complete iteration (should not trigger more calls as count < per_page)
         foreach ($iterator as $item) {
             // iterate
         }
 
-        $this->assertEquals(1, $callCount);
+        $this->assertEquals(1, $callCount, 'Should not trigger additional calls when data fits in single page');
     }
 }
