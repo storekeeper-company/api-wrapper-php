@@ -11,15 +11,15 @@ class ListCallIterator implements \Iterator, \Countable, \ArrayAccess
     /**
      * @var bool
      */
-    protected $executed = false;
+    protected bool $executed = false;
     /**
      * @var int
      */
-    protected $count;
+    protected int $count;
     /**
      * @var \ArrayIterator
      */
-    protected $it;
+    protected \ArrayIterator $it;
 
     /**
      * ListCallIterator constructor.
@@ -32,7 +32,7 @@ class ListCallIterator implements \Iterator, \Countable, \ArrayAccess
     /**
      * call the backend if needed.
      */
-    protected function ensureResult()
+    protected function ensureResult(): void
     {
         if (!$this->executed) {
             $this->executeCall();
@@ -44,10 +44,6 @@ class ListCallIterator implements \Iterator, \Countable, \ArrayAccess
     {
         return $this->executed;
     }
-
-    /**
-     * @return bool
-     */
     protected function setExecuted(bool $executed): void
     {
         $this->executed = $executed;
@@ -58,69 +54,66 @@ class ListCallIterator implements \Iterator, \Countable, \ArrayAccess
         return $this->count;
     }
 
-    /**
-     * @return int
-     */
-    public function count()
+    public function count(): int
     {
         $this->ensureResult();
 
         return $this->count;
     }
 
-    public function current()
+    public function current(): ?array
     {
         $this->ensureResult();
 
         return $this->it->current();
     }
 
-    public function next()
+    public function next(): void
     {
         $this->ensureResult();
         $this->it->next();
     }
 
-    public function key()
+    public function key(): string|int|null
     {
         $this->ensureResult();
 
         return $this->it->key();
     }
 
-    public function valid()
+    public function valid(): bool
     {
         $this->ensureResult();
 
         return $this->it->valid();
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->ensureResult();
         $this->it->rewind();
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->ensureResult();
         $this->it->offsetSet($offset, $value);
     }
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         $this->ensureResult();
 
         return $this->it->offsetExists($offset);
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $this->ensureResult();
         $this->it->offsetUnset($offset);
     }
 
-    public function offsetGet($offset)
+    public function offsetGet($offset): ?array
     {
         $this->ensureResult();
 
@@ -150,21 +143,16 @@ class ListCallIterator implements \Iterator, \Countable, \ArrayAccess
         return ($this->call)($this);
     }
 
-    /**
-     * @return mixed
-     */
-    protected function getDataFromResult(array $result)
+    protected function getDataFromResult(array $result): array
     {
-        if (!array_key_exists('data', $result)) {
-            throw new \AssertionError('No \'data\' key in result');
-        }
+        assert(isset($result['data']));
+
         if (!array_key_exists('count', $result)) {
             $this->count = count($result['data']);
         } else {
             $this->count = (int) $result['count'];
         }
-        $data = &$result['data'];
 
-        return $data;
+        return $result['data'];
     }
 }

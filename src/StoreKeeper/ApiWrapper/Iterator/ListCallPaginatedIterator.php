@@ -6,7 +6,7 @@ class ListCallPaginatedIterator extends ListCallIterator
 {
     use PaginatedIteratorTrait;
 
-    public function next()
+    public function next(): void
     {
         parent::next();
         if (!parent::valid()) {
