@@ -40,9 +40,6 @@ class DumpFile
      * @var string
      */
     protected $module_function;
-    /**
-     * @var
-     */
     protected $return;
 
     /**
@@ -87,17 +84,11 @@ class DumpFile
         return $this->module_function;
     }
 
-    /**
-     * @return mixed
-     */
     public function getReturn()
     {
         return $this->return;
     }
 
-    /**
-     * @param $type
-     */
     public function setData(string $type, array $data): void
     {
         $this->type = $type;
@@ -188,9 +179,6 @@ class DumpFile
         return $key;
     }
 
-    /**
-     * @param $data
-     */
     public static function calculateDataHash($data): string
     {
         $data = self::normalizeDataForHash($data);

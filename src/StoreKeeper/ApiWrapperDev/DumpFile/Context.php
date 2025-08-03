@@ -26,7 +26,7 @@ class Context extends \ArrayObject
     /**
      * @return string
      */
-    public function setCallId(string $id = null)
+    public function setCallId(?string $id = null)
     {
         if (is_null($id)) {
             $id = uniqid();
@@ -53,8 +53,6 @@ class Context extends \ArrayObject
     }
 
     /**
-     * @param Context $context
-     *
      * @return Context
      */
     public function setThrowable(\Throwable $e, $trace = true)

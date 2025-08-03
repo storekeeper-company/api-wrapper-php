@@ -61,6 +61,7 @@ class MockAdapterTest extends TestCase
 
     /**
      * @throws \Exception
+     *
      * @depends testRegisteredModuleApiWrapper
      * @depends testRegisteredAction
      */
@@ -94,6 +95,7 @@ class MockAdapterTest extends TestCase
 
     /**
      * @throws \Exception
+     *
      * @depends testRegisteredModuleApiWrapper
      * @depends testRegisteredAction
      */

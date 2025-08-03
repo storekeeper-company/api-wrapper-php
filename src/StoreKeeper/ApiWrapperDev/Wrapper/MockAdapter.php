@@ -19,9 +19,6 @@ use StoreKeeper\ApiWrapperDev\MockModuleApiWrapperFactory;
 class MockAdapter implements WrapperInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
-    /**
-     * @var
-     */
     protected $resource_url;
 
     public function getServer(): string
@@ -51,13 +48,7 @@ class MockAdapter implements WrapperInterface, LoggerAwareInterface
      * @var MockAction[]
      */
     protected $registered_actions = [];
-    /**
-     * @var
-     */
     protected $returns = [];
-    /**
-     * @var
-     */
     protected $used_return_keys = [];
 
     public function __construct()
@@ -99,8 +90,6 @@ class MockAdapter implements WrapperInterface, LoggerAwareInterface
     }
 
     /**
-     * @param $name
-     *
      * @throws \Exception
      */
     public function withAction($name, callable $call, bool $overwrite = false)
@@ -111,10 +100,6 @@ class MockAdapter implements WrapperInterface, LoggerAwareInterface
     }
 
     /**
-     * @param string $module
-     * @param string $name
-     * @param array $params
-     *
      * @return array|null
      *
      * @throws \Exception
@@ -152,8 +137,6 @@ class MockAdapter implements WrapperInterface, LoggerAwareInterface
     }
 
     /**
-     * @param $name
-     *
      * @throws \Exception
      */
     public function withModule($name, callable $call)
@@ -168,12 +151,9 @@ class MockAdapter implements WrapperInterface, LoggerAwareInterface
     }
 
     /**
-     * @param $name
-     * @param callable $call
-     *
      * @throws \Exception
      */
-    public function withOriginalModule(ActionWrapperInterface $wrapper, $name, callable $call = null)
+    public function withOriginalModule(ActionWrapperInterface $wrapper, $name, ?callable $call = null)
     {
         $module = \Mockery::mock(new ModuleApiWrapper($wrapper, $name, $wrapper->getAuth()));
         $this->registeredModuleApiWrapper($module);
@@ -185,7 +165,7 @@ class MockAdapter implements WrapperInterface, LoggerAwareInterface
     /**
      * @throws \Exception
      */
-    public function registerDumpFile(string $filepath, bool $matchParams = false, DumpFile\Reader $reader = null)
+    public function registerDumpFile(string $filepath, bool $matchParams = false, ?DumpFile\Reader $reader = null)
     {
         if (is_null($reader)) {
             $reader = new DumpFile\Reader();
@@ -222,10 +202,6 @@ class MockAdapter implements WrapperInterface, LoggerAwareInterface
     }
 
     /**
-     * @param $args
-     *
-     * @return mixed
-     *
      * @throws \Exception
      */
     private function returnFn($args, DumpFile $file)
@@ -242,9 +218,6 @@ class MockAdapter implements WrapperInterface, LoggerAwareInterface
         return $this->returns[$key];
     }
 
-    /**
-     * @return mixed
-     */
     public function getUsedReturns()
     {
         return $this->used_return_keys;
@@ -257,7 +230,7 @@ class MockAdapter implements WrapperInterface, LoggerAwareInterface
         array $filepaths,
         string $path_prefix = '',
         bool $matchParams = false,
-        DumpFile\Reader $reader = null)
+        ?DumpFile\Reader $reader = null)
     {
         foreach ($filepaths as $filepath) {
             if (!empty($path_prefix)) {

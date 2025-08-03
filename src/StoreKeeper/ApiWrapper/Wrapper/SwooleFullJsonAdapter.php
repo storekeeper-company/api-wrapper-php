@@ -21,9 +21,6 @@ class SwooleFullJsonAdapter extends AsyncFullJsonAdapter
         parent::__construct($server, $connection_options);
     }
 
-    /**
-     * @param $call
-     */
     protected function postProcessCall(PromiseInterface $call)
     {
         parent::postProcessCall($call);

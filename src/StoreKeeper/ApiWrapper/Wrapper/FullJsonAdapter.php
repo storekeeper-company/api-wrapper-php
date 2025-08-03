@@ -98,7 +98,6 @@ class FullJsonAdapter implements WrapperInterface
         return $response_body['response'];
     }
 
-
     public function callAction(string $action, array $params = []): mixed
     {
         return $this->callUrl($this->makeActionPath($action), $params, "Action($action)");

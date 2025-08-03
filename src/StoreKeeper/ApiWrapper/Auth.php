@@ -4,7 +4,6 @@ namespace StoreKeeper\ApiWrapper;
 
 class Auth
 {
-
     protected array $auth = [];
 
     protected array $extra = [];
@@ -15,7 +14,7 @@ class Auth
      */
     protected $refreshCallback;
 
-    public function __construct(array $auth = null, array $extra = null)
+    public function __construct(?array $auth = null, ?array $extra = null)
     {
         if (!empty($auth)) {
             $this->setAuth($auth);
@@ -89,9 +88,6 @@ class Auth
         $this->extra[$name] = $data;
     }
 
-    /**
-     * @return array
-     */
     public function getExtra(): array
     {
         return $this->extra;
@@ -99,9 +95,6 @@ class Auth
 
     /**
      * sets user.
-     *
-     * @param string $account account name
-     * @param string $user    user login
      */
     public function setAnonymous(): void
     {
@@ -113,8 +106,7 @@ class Auth
     /**
      * sets user.
      *
-     * @param string $account account name
-     * @param string $user    user login
+     * @param string $user user login
      */
     public function setUser($user): void
     {
@@ -125,7 +117,6 @@ class Auth
     /**
      * sets subuser.
      *
-     * @param string $account    account name
      * @param string $subaccount subaccount name
      * @param string $user       subuser login
      */
@@ -237,9 +228,6 @@ class Auth
         $this->auth = $auth;
     }
 
-    /**
-     * @return array
-     */
     public function getAuth(): array
     {
         return $this->auth;

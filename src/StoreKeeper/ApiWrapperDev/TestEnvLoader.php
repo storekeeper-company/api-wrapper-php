@@ -34,7 +34,7 @@ class TestEnvLoader
         return self::$projectRoot;
     }
 
-    public static function loadDotEnv(string $projectRoot = null)
+    public static function loadDotEnv(?string $projectRoot = null)
     {
         if (!empty($projectRoot)) {
             self::setProjectRoot($projectRoot);

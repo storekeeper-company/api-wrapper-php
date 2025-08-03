@@ -8,17 +8,8 @@ class ListCallIterator implements \Iterator, \Countable, \ArrayAccess
      * @var callable
      */
     protected $call;
-    /**
-     * @var bool
-     */
     protected bool $executed = false;
-    /**
-     * @var int
-     */
     protected int $count;
-    /**
-     * @var \ArrayIterator
-     */
     protected \ArrayIterator $it;
 
     /**
@@ -44,6 +35,7 @@ class ListCallIterator implements \Iterator, \Countable, \ArrayAccess
     {
         return $this->executed;
     }
+
     protected function setExecuted(bool $executed): void
     {
         $this->executed = $executed;
@@ -127,9 +119,6 @@ class ListCallIterator implements \Iterator, \Countable, \ArrayAccess
         $this->setItFromData($data);
     }
 
-    /**
-     * @param $data
-     */
     protected function setItFromData(array $data): void
     {
         $this->it = new \ArrayIterator($data);

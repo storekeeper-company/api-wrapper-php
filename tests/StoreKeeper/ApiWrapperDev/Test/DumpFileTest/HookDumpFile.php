@@ -20,9 +20,6 @@ class HookDumpFile extends DumpFile
         }
     }
 
-    /**
-     * @return mixed
-     */
     public function getHookName()
     {
         return $this->hook_name;

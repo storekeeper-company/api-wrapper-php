@@ -9,9 +9,6 @@ class Reader
     use TypeDependentTrait;
 
     /**
-     * @param string $data
-     * @param $filepath
-     *
      * @return mixed
      */
     public static function decode(string $json, string $filepath = ''): array
@@ -27,9 +24,6 @@ class Reader
         return $data;
     }
 
-    /**
-     * @param $filepath
-     */
     public function read($filepath): DumpFile
     {
         $file = new \SplFileInfo($filepath);

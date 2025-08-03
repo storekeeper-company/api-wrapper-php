@@ -44,10 +44,6 @@ class DebugApiWrapper extends ApiWrapper
     }
 
     /**
-     * @param $type
-     *
-     * @return mixed
-     *
      * @throws \Throwable
      */
     protected function withDebug($type, callable $call)
@@ -85,7 +81,7 @@ class DebugApiWrapper extends ApiWrapper
         });
     }
 
-    public function callFunction(string $module_name, string $name, array $params = [], Auth $auth = null): mixed
+    public function callFunction(string $module_name, string $name, array $params = [], ?Auth $auth = null): mixed
     {
         return $this->withDebug(DumpFile::MODULE_TYPE, function (\ArrayObject $context) use ($module_name, $name, $params, $auth) {
             $context['module_name'] = $module_name;

@@ -43,9 +43,6 @@ trait TypeDependentTrait
         }
     }
 
-    /**
-     * @param $type
-     */
     public function getClassForFileDumpType($type): string
     {
         if (array_key_exists($type, $this->extra_file_dump_types)) {

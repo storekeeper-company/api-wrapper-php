@@ -18,5 +18,4 @@ interface WrapperInterface extends \Stringable
     public function call(string $module, string $name, array $params, Auth $auth): mixed;
 
     public function callAction(string $action, array $params = []): mixed;
-
 }

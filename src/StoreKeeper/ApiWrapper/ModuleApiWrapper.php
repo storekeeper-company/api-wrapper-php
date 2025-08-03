@@ -18,12 +18,9 @@ class ModuleApiWrapper implements ModuleApiWrapperInterface
     protected $auth;
 
     /**
-     * @param $module_name
-     * @param Auth $auth
-     *
      * @throws \LogicException when module name is empty
      */
-    public function __construct(ActionWrapperInterface $api_wrapper, $module_name, Auth $auth = null)
+    public function __construct(ActionWrapperInterface $api_wrapper, $module_name, ?Auth $auth = null)
     {
         $this->api_wrapper = $api_wrapper;
         $module_name = trim($module_name);
@@ -49,12 +46,6 @@ class ModuleApiWrapper implements ModuleApiWrapperInterface
         return $this->auth;
     }
 
-    /**
-     * @param $name
-     * @param $params
-     *
-     * @return mixed
-     */
     public function __call($name, $params)
     {
         return $this->api_wrapper->callFunction(

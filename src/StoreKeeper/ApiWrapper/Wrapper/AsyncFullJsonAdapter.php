@@ -20,8 +20,6 @@ class AsyncFullJsonAdapter extends FullJsonAdapter implements AsyncWrapperInterf
 
     /**
      * sets server to connect to.
-     *
-     * @param string $server
      */
     public function setServer(string $server, array $options = []): void
     {
@@ -38,12 +36,6 @@ class AsyncFullJsonAdapter extends FullJsonAdapter implements AsyncWrapperInterf
         );
     }
 
-    /**
-     * @param $action
-     * @param $params
-     *
-     * @return mixed
-     */
     public function callUrl($url, $params, $name)
     {
         if (is_null($this->client)) {

@@ -23,7 +23,7 @@ class ActionWrapper implements ActionWrapperInterface, LoggerAwareInterface
     /**
      * ActionWrapper constructor.
      */
-    public function __construct(WrapperInterface $wrapper = null)
+    public function __construct(?WrapperInterface $wrapper = null)
     {
         if (!empty($wrapper)) {
             $this->setWrapper($wrapper);

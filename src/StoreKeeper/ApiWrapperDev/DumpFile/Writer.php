@@ -73,10 +73,6 @@ class Writer
     }
 
     /**
-     * @param $type
-     *
-     * @return mixed
-     *
      * @throws \Throwable
      */
     public function withDump(string $type, callable $call)
@@ -95,10 +91,6 @@ class Writer
         return $return;
     }
 
-    /**
-     * @param $type
-     * @param $return
-     */
     public function writeSuccess($type, $return, Context $context): string
     {
         $this->cleanContextFromSecretsForType($type, $context);
@@ -112,9 +104,6 @@ class Writer
         return $filename;
     }
 
-    /**
-     * @param $type
-     */
     public function writeError($type, \Throwable $e, Context $context): string
     {
         $this->cleanContextFromSecretsForType($type, $context);
@@ -128,9 +117,6 @@ class Writer
         return $filename;
     }
 
-    /**
-     * @param $name
-     */
     protected function getDumpFilename($name, bool $success, Context $context): string
     {
         $filename = date('Ymd_His').".$name.";
@@ -142,9 +128,6 @@ class Writer
         return $filename;
     }
 
-    /**
-     * @param string $type
-     */
     protected function dumpData(string $filename, Context $context)
     {
         $context->stopTimer();
@@ -163,10 +146,6 @@ class Writer
         }
     }
 
-    /**
-     * @param $type
-     * @param string $filename
-     */
     protected function getFilenamePartForType($type, Context $context): string
     {
         $class = $this->getClassForFileDumpType($type);
@@ -176,8 +155,6 @@ class Writer
 
     /**
      * Gets data cleaned from any passwords and secrets.
-     *
-     * @param $type
      *
      * @return array
      */

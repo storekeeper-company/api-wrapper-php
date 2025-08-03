@@ -22,7 +22,7 @@ class GeneralException extends \RuntimeException
     /**
      * @var string
      */
-    protected $ref = null;
+    protected $ref;
     /**
      * @var string
      */
@@ -60,7 +60,7 @@ class GeneralException extends \RuntimeException
     public function __construct(
         $message, $code, $ref = '',
         $external_trace_as_string = '',
-        \Throwable $previous = null)
+        ?\Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->ref = (string) $ref;
@@ -68,10 +68,6 @@ class GeneralException extends \RuntimeException
     }
 
     /**
-     * @param string $class error class
-     * @param string $error message
-     * @param int    $code  code
-     *
      * @return GeneralException
      */
     public static function buildFromBody(array $body)
@@ -86,8 +82,8 @@ class GeneralException extends \RuntimeException
 
         // create exception fron devel mode
         $prev_ex = null;
-        if (array_key_exists('devel_error', $body) &&
-                is_array($body['devel_error']) && !empty($body['devel_error'])) {
+        if (array_key_exists('devel_error', $body)
+                && is_array($body['devel_error']) && !empty($body['devel_error'])) {
             $prev_ex = self::buildFromBody($body['devel_error']);
         }
         if (!empty($body['trace'])) {

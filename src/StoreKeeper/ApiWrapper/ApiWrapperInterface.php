@@ -11,7 +11,7 @@ interface ApiWrapperInterface extends ActionWrapperInterface
 
     public function getAuth(): Auth;
 
-    public function callFunction(string $module_name, string $name, array $params = [], Auth $auth = null): mixed;
+    public function callFunction(string $module_name, string $name, array $params = [], ?Auth $auth = null): mixed;
 
-    public function getModule(string $module_name, Auth $auth = null): ModuleApiWrapperInterface;
+    public function getModule(string $module_name, ?Auth $auth = null): ModuleApiWrapperInterface;
 }

@@ -16,7 +16,7 @@ class ListCallByIdIterator extends ListCallIterator
     /**
      * ListCallByIdIterator constructor.
      */
-    public function __construct(callable $call, string $key = null)
+    public function __construct(callable $call, ?string $key = null)
     {
         parent::__construct($call);
 

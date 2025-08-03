@@ -29,9 +29,6 @@ class MockAction
         return $this->name;
     }
 
-    /**
-     * @param callable $call
-     */
     public function onCall($params)
     {
         if (empty($this->mock)) {
@@ -41,7 +38,7 @@ class MockAction
         return $this->mock->onCall($params);
     }
 
-    public function setMock(callable $builder = null): MockAction
+    public function setMock(?callable $builder = null): MockAction
     {
         if (empty($builder)) {
             $builder = function (ExpectationInterface $mockCall) {
