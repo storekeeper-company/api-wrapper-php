@@ -240,7 +240,7 @@ class MockAdapter implements WrapperInterface, LoggerAwareInterface
         }
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return 'MockAdapter';
     }

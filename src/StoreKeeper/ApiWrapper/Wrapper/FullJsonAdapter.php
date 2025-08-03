@@ -103,7 +103,7 @@ class FullJsonAdapter implements WrapperInterface
         return $this->callUrl($this->makeActionPath($action), $params, "Action($action)");
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return 'FullJsonAdapter('.$this->server.')';
     }

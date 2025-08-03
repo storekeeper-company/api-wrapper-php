@@ -4,14 +4,9 @@ namespace StoreKeeper\ApiWrapper\Iterator;
 
 class ListCallByIdIterator extends ListCallIterator
 {
-    /**
-     * @var string|null
-     */
-    protected $key = 'id';
-    /**
-     * @var array
-     */
-    protected $keys = [];
+    protected ?string $key = 'id';
+
+    protected array $keys = [];
 
     /**
      * ListCallByIdIterator constructor.

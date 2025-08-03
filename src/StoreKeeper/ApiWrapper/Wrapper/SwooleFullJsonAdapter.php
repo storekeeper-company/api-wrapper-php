@@ -34,7 +34,7 @@ class SwooleFullJsonAdapter extends AsyncFullJsonAdapter
         });
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return 'SwooleFullJsonAdapter('.$this->server.')';
     }

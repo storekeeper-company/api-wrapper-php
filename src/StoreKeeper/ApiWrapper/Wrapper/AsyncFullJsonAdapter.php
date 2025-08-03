@@ -90,7 +90,7 @@ class AsyncFullJsonAdapter extends FullJsonAdapter implements AsyncWrapperInterf
         $this->handler->tick();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return 'AsyncFullJsonAdapter('.$this->server.')';
     }
