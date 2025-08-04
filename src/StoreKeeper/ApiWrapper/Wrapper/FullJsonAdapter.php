@@ -57,7 +57,7 @@ class FullJsonAdapter implements WrapperInterface
     public function call(string $module, string $name, array $params, Auth $auth): mixed
     {
         if (!$auth->isValid()) {
-            throw new \LogicException('Auth is not properly setup');
+            throw new \LogicException("Auth is not properly setup ($module::$name)");
         }
         $url = $this->makeApiRequestPath($module, $name);
         $params = [
@@ -75,7 +75,7 @@ class FullJsonAdapter implements WrapperInterface
         }
 
         if (is_null($this->client)) {
-            throw new \LogicException('Server is not set');
+            throw new \LogicException("Server is not properly setup ($url)");
         }
         $options = [
             'json' => $params,
